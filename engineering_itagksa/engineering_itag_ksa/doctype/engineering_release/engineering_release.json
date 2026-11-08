@@ -30,7 +30,8 @@
   "return_reason",
   "active_release_key",
   "cancellation_section",
-  "cancellation_reason"
+  "cancellation_reason",
+  "amended_from"
  ],
  "fields": [
   {
@@ -156,6 +157,16 @@
    "label": "Cancellation Reason",
    "allow_on_submit": 1,
    "description": "Required before cancel. The reason is kept on the timeline."
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "options": "Engineering Release",
+   "read_only": 1,
+   "print_hide": 1,
+   "no_copy": 1,
+   "search_index": 1
   }
  ],
  "permissions": [

@@ -273,6 +273,10 @@ class TestConfirmedProcess(FrappeTestCase):
 		draft.bom = bom
 		draft.routing = routing
 		self._raises(draft.save)
+		draft.reload()
+		draft.engineering_drawing = drawing.name
+		draft.material_specification = spec.name
+		draft.bom = bom
 		matching = self._routing(time_in_mins=40, workstation="Release Bench")
 		draft.routing = matching
 		draft.save()
