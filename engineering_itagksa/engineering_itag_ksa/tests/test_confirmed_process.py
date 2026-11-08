@@ -413,6 +413,8 @@ class TestConfirmedProcess(FrappeTestCase):
 		existing = frappe.db.get_value("Company", {}, "name")
 		if existing:
 			return existing
+		if not frappe.db.exists("Warehouse Type", "Transit"):
+			frappe.get_doc({"doctype": "Warehouse Type", "name": "Transit"}).insert(ignore_permissions=True)
 		doc = frappe.get_doc(
 			{
 				"doctype": "Company",

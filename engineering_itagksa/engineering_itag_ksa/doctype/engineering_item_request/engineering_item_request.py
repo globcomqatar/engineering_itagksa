@@ -26,10 +26,10 @@ class EngineeringItemRequest(Document):
 	def validate(self):
 		guard_data_import(self)
 		if frappe.flags.in_import:
-			self._validate_links(require_submitted=False)
+			self._validate_engineering_links(require_submitted=False)
 			return
 		self._protect_created_item()
-		self._validate_links(require_submitted=False)
+		self._validate_engineering_links(require_submitted=False)
 
 	def before_submit(self):
 		if frappe.flags.in_import:
@@ -37,7 +37,7 @@ class EngineeringItemRequest(Document):
 		require_role(
 			ENGINEERING_MANAGER, _("Only Engineering Manager can submit an Engineering Item Request.")
 		)
-		self._validate_links(require_submitted=True)
+		self._validate_engineering_links(require_submitted=True)
 		if self.amended_from:
 			self._assert_original_item()
 			return
@@ -52,7 +52,7 @@ class EngineeringItemRequest(Document):
 		# The created Item stays as it was. Cancellation does not edit or cancel it.
 		return
 
-	def _validate_links(self, *, require_submitted: bool) -> None:
+	def _validate_engineering_links(self, *, require_submitted: bool) -> None:
 		assert_link(DRAWING, self.engineering_drawing, require_submitted=require_submitted)
 		assert_link(
 			MATERIAL_SPECIFICATION,
