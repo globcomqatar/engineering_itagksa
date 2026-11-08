@@ -65,7 +65,7 @@ class TestConfirmedProcess(FrappeTestCase):
 		owned = self._drawing(self.manager)
 		self._raises(owned.submit)
 		self._as(self.manager)
-		self._raises(drawing.submit)
+		self._raises(drawing.reload().submit)
 		self._attach(drawing, private=0)
 		self._raises(drawing.reload().submit)
 		frappe.db.delete("File", {"attached_to_doctype": drawing.doctype, "attached_to_name": drawing.name})
@@ -78,8 +78,10 @@ class TestConfirmedProcess(FrappeTestCase):
 		spec = self._specification(self.user, standards="")
 		self._as(self.manager)
 		self._raises(spec.submit)
+		spec.reload()
 		spec.standards = "ASTM body"
 		spec.save()
+		spec.reload()
 		spec.submit()
 		self.assertEqual(spec.docstatus, 1)
 		with_file = self._specification(self.user, standards="ISO body")
@@ -354,7 +356,7 @@ class TestConfirmedProcess(FrappeTestCase):
 		doc.item_code = f"ITAG-{random_string(8)}"
 		doc.item_name = doc.item_code
 		doc.item_group = self._item_group()
-		doc.stock_uom = "Nos"
+		doc.stock_uom = self._uom()
 		doc.item_category = "Manufacturing"
 		doc.engineering_drawing = drawing
 		doc.material_specification = spec
@@ -378,20 +380,30 @@ class TestConfirmedProcess(FrappeTestCase):
 				"item_code": code,
 				"item_name": code,
 				"item_group": self._item_group(),
-				"stock_uom": "Nos",
+				"stock_uom": self._uom(),
 				"is_stock_item": 1,
 			}
 		).insert(ignore_permissions=True)
 		return code
 
+	def _uom(self):
+		if not frappe.db.exists("UOM", "Nos"):
+			frappe.get_doc({"doctype": "UOM", "uom_name": "Nos"}).insert(ignore_permissions=True)
+		return "Nos"
+
 	def _item_group(self):
+		root = "All Item Groups"
+		if not frappe.db.exists("Item Group", root):
+			frappe.get_doc({"doctype": "Item Group", "item_group_name": root, "is_group": 1}).insert(
+				ignore_permissions=True
+			)
 		name = "Engineering ITAG Test"
 		if not frappe.db.exists("Item Group", name):
 			frappe.get_doc(
 				{
 					"doctype": "Item Group",
 					"item_group_name": name,
-					"parent_item_group": "All Item Groups",
+					"parent_item_group": root,
 					"is_group": 0,
 				}
 			).insert(ignore_permissions=True)
@@ -438,7 +450,7 @@ class TestConfirmedProcess(FrappeTestCase):
 			"is_active": 1,
 			"is_default": 0,
 			"with_operations": 1 if operations else 0,
-			"items": [{"item_code": raw, "qty": 1, "uom": "Nos", "rate": 1}],
+			"items": [{"item_code": raw, "qty": 1, "uom": self._uom(), "rate": 1}],
 		}
 		if operations:
 			workstation = self._workstation("Release Bench")
