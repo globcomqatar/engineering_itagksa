@@ -150,6 +150,7 @@ class TestConfirmedProcess(FrappeTestCase):
 		self._raises(request.submit)
 		cancelled = self._submitted_drawing()
 		self._cancel(cancelled)
+		self._as(self.manager)
 		request = self._request(drawing=cancelled.name)
 		self._raises(request.insert)
 		request = self._request()
