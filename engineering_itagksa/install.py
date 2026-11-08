@@ -74,9 +74,21 @@ def ensure_workflow_metadata():
 def ensure_workflow():
 	states = [
 		{"state": "Draft", "doc_status": "0", "allow_edit": ENGINEERING_USER, "send_email": 0},
-		{"state": "Approved", "doc_status": "0", "allow_edit": "", "send_email": 0},
-		{"state": "Released for Production", "doc_status": "1", "allow_edit": "", "send_email": 0},
-		{"state": "Cancelled", "doc_status": "2", "allow_edit": "", "send_email": 0},
+		# allow_edit is mandatory in Frappe v15. Server-side validation still rejects
+		# engineering-field edits while Approved or Released for Production.
+		{
+			"state": "Approved",
+			"doc_status": "0",
+			"allow_edit": ENGINEERING_MANAGER_MASTER,
+			"send_email": 0,
+		},
+		{
+			"state": "Released for Production",
+			"doc_status": "1",
+			"allow_edit": ENGINEERING_MANAGER_MASTER,
+			"send_email": 0,
+		},
+		{"state": "Cancelled", "doc_status": "2", "allow_edit": ENGINEERING_MANAGER_MASTER, "send_email": 0},
 	]
 	transitions = [
 		{
