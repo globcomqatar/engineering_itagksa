@@ -1,9 +1,7 @@
 app_name = "engineering_itagksa"
 app_title = "Engineering ITAG KSA"
 app_publisher = "Globcom Qatar (Globcom Solutions and Services)"
-app_description = (
-	"Customer-specific foundation scaffold for Engineering ITAG KSA on Frappe v15 and ERPNext v15."
-)
+app_description = "Customer-specific Engineering ITAG KSA on Frappe v15 and ERPNext v15."
 app_email = ""
 app_license = "custom"
 
@@ -14,6 +12,23 @@ app_license = "custom"
 # resolves it to the erpnext app. Frappe is the bench framework and is not listed.
 # Version ranges are in pyproject.toml under [tool.bench.frappe-dependencies].
 required_apps = ["frappe/erpnext"]
+
+after_install = "engineering_itagksa.install.after_install"
+after_migrate = "engineering_itagksa.install.after_migrate"
+
+has_permission = {
+	"Engineering Drawing": "engineering_itagksa.engineering_itag_ksa.controls.has_permission",
+	"Material Specification": "engineering_itagksa.engineering_itag_ksa.controls.has_permission",
+	"Engineering Item Request": "engineering_itagksa.engineering_itag_ksa.controls.has_permission",
+	"Engineering Release": "engineering_itagksa.engineering_itag_ksa.controls.has_permission",
+}
+
+doctype_js = {
+	"Engineering Drawing": "public/js/engineering_desk.js",
+	"Material Specification": "public/js/engineering_desk.js",
+	"Engineering Item Request": "public/js/engineering_desk.js",
+	"Engineering Release": "public/js/engineering_desk.js",
+}
 
 # Each item in the list will be shown as an app in the apps page
 # add_to_apps_screen = [

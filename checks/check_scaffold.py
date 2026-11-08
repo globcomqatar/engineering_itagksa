@@ -21,37 +21,21 @@ import tomllib
 ROOT = Path(__file__).resolve().parents[1]
 PKG = ROOT / "engineering_itagksa"
 
-EXPECTED_FILES = {
-	".editorconfig",
-	".eslintrc",
-	".github/workflows/scaffold-checks.yml",
-	".gitignore",
-	".pre-commit-config.yaml",
-	"README.md",
-	"checks/check_scaffold.py",
-	"engineering_itagksa/__init__.py",
-	"engineering_itagksa/config/__init__.py",
-	"engineering_itagksa/engineering_itag_ksa/__init__.py",
-	"engineering_itagksa/hooks.py",
-	"engineering_itagksa/modules.txt",
-	"engineering_itagksa/patches.txt",
-	"engineering_itagksa/patches/__init__.py",
-	"engineering_itagksa/public/.gitkeep",
-	"engineering_itagksa/templates/__init__.py",
-	"engineering_itagksa/templates/pages/__init__.py",
-	"license.txt",
-	"pyproject.toml",
-}
-
 ALLOWED_HOOK_ASSIGNMENTS = {
+	"after_install",
+	"after_migrate",
 	"app_description",
 	"app_email",
 	"app_license",
 	"app_name",
 	"app_publisher",
 	"app_title",
+	"doctype_js",
+	"has_permission",
 	"required_apps",
 }
+
+FORBIDDEN_PATH_PARTS = ("product_revision", "work_order", "custom_field", "fixtures")
 
 
 def scrub(txt: str) -> str:
@@ -61,20 +45,21 @@ def scrub(txt: str) -> str:
 
 class ScaffoldChecks(unittest.TestCase):
 	def test_tracked_tree_is_scaffold_only(self):
-		found = set()
-		for path in ROOT.rglob("*"):
-			if not path.is_file():
-				continue
-			relative = path.relative_to(ROOT)
-			if ".git" in relative.parts:
-				continue
-			posix = relative.as_posix()
-			if posix.startswith(("dist/", ".ruff_cache/")) or posix.endswith(".pyc"):
-				continue
-			if "__pycache__" in relative.parts:
-				continue
-			found.add(posix)
-		self.assertEqual(found, EXPECTED_FILES)
+		for path in self._project_files():
+			for part in path.parts:
+				self.assertNotIn(part, FORBIDDEN_PATH_PARTS, path.as_posix())
+		required = [
+			"engineering_itagksa/hooks.py",
+			"engineering_itagksa/install.py",
+			"engineering_itagksa/engineering_itag_ksa/doctype/engineering_drawing/engineering_drawing.json",
+			"engineering_itagksa/engineering_itag_ksa/doctype/material_specification/material_specification.json",
+			"engineering_itagksa/engineering_itag_ksa/doctype/engineering_item_request/engineering_item_request.json",
+			"engineering_itagksa/engineering_itag_ksa/doctype/engineering_release/engineering_release.json",
+			"docs/acceptance-matrix.md",
+		]
+		found = {path.as_posix() for path in self._project_files()}
+		for item in required:
+			self.assertIn(item, found)
 
 	def test_package_identity(self):
 		hooks = self._hooks()
@@ -86,7 +71,8 @@ class ScaffoldChecks(unittest.TestCase):
 		)
 		self.assertEqual(hooks["app_license"], "custom")
 		self.assertEqual(hooks["app_email"], "")
-		self.assertIn("foundation scaffold", hooks["app_description"])
+		self.assertIn("Engineering ITAG KSA", hooks["app_description"])
+		self.assertNotIn("frappe", " ".join(self._pyproject()["project"].get("dependencies") or []).lower())
 		self.assertEqual(hooks["required_apps"], ["frappe/erpnext"])
 
 	def test_hooks_stay_minimal(self):
@@ -131,10 +117,15 @@ class ScaffoldChecks(unittest.TestCase):
 			if not stripped or stripped.startswith("#") or stripped.startswith("["):
 				continue
 			self.fail(f"unexpected patch entry: {stripped}")
-		self.assertEqual(list(PKG.rglob("*.json")), [])
-		for path in PKG.rglob("*"):
-			self.assertNotIn("doctype", path.parts)
-			self.assertNotIn("fixtures", path.parts)
+		for path in PKG.rglob("*.json"):
+			relative = path.relative_to(PKG).as_posix()
+			self.assertTrue("/doctype/" in relative or "/workspace/" in relative, relative)
+		joined = "\n".join(path.read_text(encoding="utf-8") for path in PKG.rglob("*.json"))
+		for series in ("EIR-.#####", "DWG-.#####", "MS-.#####", "ER-.#####"):
+			self.assertIn(series, joined)
+		self.assertNotIn("Product Revision", joined)
+		self.assertNotIn("Work Order", joined)
+		self.assertIsNone(self._hooks().get("doc_events"))
 
 	def test_license_file_grants_nothing(self):
 		text = (ROOT / "license.txt").read_text(encoding="utf-8").lower()
@@ -153,7 +144,6 @@ class ScaffoldChecks(unittest.TestCase):
 		readme = (ROOT / "README.md").read_text(encoding="utf-8")
 		self.assertTrue(readme.startswith("# engineering_itagksa\n"))
 		for phrase in (
-			"foundation scaffold",
 			"engineering_itag_ksa",
 			"Full bench installation tests were not run",
 			"not independent QA",
@@ -205,6 +195,23 @@ class ScaffoldChecks(unittest.TestCase):
 		editor = (ROOT / ".editorconfig").read_text(encoding="utf-8")
 		self.assertIn("indent_style = tab", editor)
 		self.assertIn("root = true", editor)
+
+	def _project_files(self):
+		files = []
+		for path in ROOT.rglob("*"):
+			if not path.is_file():
+				continue
+			relative = path.relative_to(ROOT)
+			if ".git" in relative.parts or "__pycache__" in relative.parts:
+				continue
+			posix = relative.as_posix()
+			if posix.startswith(("dist/", ".ruff_cache/")) or posix.endswith(".pyc"):
+				continue
+			files.append(relative)
+		return files
+
+	def _pyproject(self) -> dict:
+		return tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
 
 	def _hooks(self) -> dict:
 		tree = ast.parse((PKG / "hooks.py").read_text(encoding="utf-8"))

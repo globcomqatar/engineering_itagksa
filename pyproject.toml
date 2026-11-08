@@ -4,7 +4,7 @@ authors = [
     # Publisher contact email was not supplied. It is omitted rather than invented.
     { name = "Globcom Qatar (Globcom Solutions and Services)" }
 ]
-description = "Customer-specific foundation scaffold for Engineering ITAG KSA on Frappe v15 and ERPNext v15."
+description = "Customer-specific Engineering ITAG KSA on Frappe v15 and ERPNext v15."
 requires-python = ">=3.10"
 readme = "README.md"
 dynamic = ["version"]

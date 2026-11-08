@@ -36,7 +36,9 @@ jobs:
         with:
           python-version: "3.12"
       - name: Static scaffold checks
-        run: python checks/check_scaffold.py
+        run: |
+          python checks/check_scaffold.py
+          python checks/test_release_rules.py
       - name: Build a wheel with the declared flit backend
         run: |
           python -m pip install --upgrade build
