@@ -1,0 +1,13 @@
+License terms have not been supplied.
+
+This repository holds customer-specific company code for Engineering ITAG KSA.
+Publisher: Globcom Qatar (Globcom Solutions and Services).
+
+app_license is set to "custom" because that is the Frappe version-15 generator
+option for a license outside the SPDX list offered by bench new-app. That value
+records an absent choice. It is not a reuse grant.
+
+Missing required metadata, still to be supplied by the Owner:
+
+- License terms and any reuse conditions.
+- Publisher contact email.

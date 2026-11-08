@@ -1,0 +1,57 @@
+name: Scaffold checks
+
+on:
+  pull_request:
+  push:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: scaffold-checks-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  compile:
+    name: Compile (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Byte-compile the app package
+        run: python -m compileall -q engineering_itagksa checks
+
+  scaffold:
+    name: Scaffold identity and packaging
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Static scaffold checks
+        run: python checks/check_scaffold.py
+      - name: Build a wheel with the declared flit backend
+        run: |
+          python -m pip install --upgrade build
+          python -m build --wheel
+          python - << 'PY'
+          import zipfile
+          from pathlib import Path
+
+          wheels = sorted(Path("dist").glob("engineering_itagksa-*.whl"))
+          if len(wheels) != 1:
+              raise SystemExit(f"expected one wheel, found {wheels}")
+          names = zipfile.ZipFile(wheels[0]).namelist()
+          if not any(name.startswith("engineering_itagksa/hooks.py") for name in names):
+              raise SystemExit("wheel is missing hooks.py")
+          if any("doctype" in name for name in names):
+              raise SystemExit("wheel contains a doctype path")
+          print(wheels[0].name)
+          PY
