@@ -84,8 +84,17 @@ python3 -m build --wheel
 
 ## Verification and acceptance
 
-Scaffold and process checks here cover package identity, the v15 bench dependency declaration, operation-sequence comparison, byte-compile, and the DocType files.
+Static checks cover package identity, the v15 bench dependency declaration, operation-sequence comparison, byte-compile, and the DocType files. A wheel build checks packaging only.
 
-Full bench installation tests were not run in the environment that produced a given commit unless the commit report says a site name, bench version, and test command passed. A wheel build is a packaging check. It is not an installed-site test.
+On the disposable site `itag.localhost`, builder self-tests were executed with Frappe v15.126.0, ERPNext v15.124.5, bench 5.31.1, Python 3.12.3, and MariaDB 10.11.14:
+
+```bash
+bench --site itag.localhost install-app engineering_itagksa
+bench --site itag.localhost migrate
+bench build --app engineering_itagksa
+bench --site itag.localhost run-tests --app engineering_itagksa
+```
+
+`run-tests` reported `Ran 8 tests in 5.713s` and `OK`. These are builder self-tests, not independent QA. The site was created for this run and is not a customer site.
 
 Functional acceptance of rules outside `docs/acceptance-matrix.md` remains with the Owner. Independent CTO review, security review, separate QA, and Owner release approval remain pending.

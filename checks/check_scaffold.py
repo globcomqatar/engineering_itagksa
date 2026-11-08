@@ -145,8 +145,8 @@ class ScaffoldChecks(unittest.TestCase):
 		self.assertTrue(readme.startswith("# engineering_itagksa\n"))
 		for phrase in (
 			"engineering_itag_ksa",
-			"Full bench installation tests were not run",
 			"not independent QA",
+			"itag.localhost",
 			"License terms were not supplied",
 			"Publisher contact email was not supplied",
 			"Product Revision",
