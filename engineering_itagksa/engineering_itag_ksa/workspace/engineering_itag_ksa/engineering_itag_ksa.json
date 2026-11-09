@@ -1,0 +1,97 @@
+{
+ "doctype": "Workspace",
+ "name": "Engineering ITAG KSA",
+ "label": "Engineering",
+ "title": "Engineering",
+ "module": "Engineering ITAG KSA",
+ "public": 1,
+ "is_hidden": 0,
+ "icon": "tool",
+ "sequence_id": 10.0,
+ "content": "[{\"type\": \"header\", \"data\": {\"text\": \"Engineering\", \"col\": 12}}, {\"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Engineering Item Request\", \"col\": 3}}, {\"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Engineering Drawing\", \"col\": 3}}, {\"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Material Specification\", \"col\": 3}}, {\"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Engineering Release\", \"col\": 3}}]",
+ "shortcuts": [
+  {
+   "color": "Grey",
+   "label": "Engineering Item Request",
+   "link_to": "Engineering Item Request",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "label": "Engineering Drawing",
+   "link_to": "Engineering Drawing",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "label": "Material Specification",
+   "link_to": "Material Specification",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "label": "Engineering Release",
+   "link_to": "Engineering Release",
+   "type": "DocType"
+  }
+ ],
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Documents",
+   "link_count": 0,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Engineering Item Request",
+   "link_count": 0,
+   "link_to": "Engineering Item Request",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Engineering Drawing",
+   "link_count": 0,
+   "link_to": "Engineering Drawing",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Material Specification",
+   "link_count": 0,
+   "link_to": "Material Specification",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Engineering Release",
+   "link_count": 0,
+   "link_to": "Engineering Release",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "charts": [],
+ "number_cards": [],
+ "quick_lists": [],
+ "roles": [],
+ "custom_blocks": []
+}

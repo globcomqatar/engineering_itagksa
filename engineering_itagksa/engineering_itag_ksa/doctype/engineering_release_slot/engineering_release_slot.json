@@ -1,0 +1,57 @@
+{
+ "doctype": "DocType",
+ "name": "Engineering Release Slot",
+ "module": "Engineering ITAG KSA",
+ "engine": "InnoDB",
+ "autoname": "Prompt",
+ "istable": 0,
+ "is_submittable": 0,
+ "track_changes": 0,
+ "allow_rename": 0,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "description": "Internal lock. One row exists only while an Engineering Release is Released for Production for that Item and BOM.",
+ "field_order": [
+  "engineering_release",
+  "item",
+  "bom"
+ ],
+ "fields": [
+  {
+   "fieldname": "engineering_release",
+   "fieldtype": "Link",
+   "label": "Engineering Release",
+   "options": "Engineering Release",
+   "reqd": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "item",
+   "fieldtype": "Link",
+   "label": "Item",
+   "options": "Item",
+   "reqd": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "bom",
+   "fieldtype": "Link",
+   "label": "BOM",
+   "options": "BOM",
+   "reqd": 1,
+   "read_only": 1
+  }
+ ],
+ "permissions": [
+  {
+   "role": "System Manager",
+   "read": 1,
+   "export": 1,
+   "print": 1,
+   "report": 1
+  }
+ ],
+ "actions": [],
+ "links": [],
+ "states": []
+}

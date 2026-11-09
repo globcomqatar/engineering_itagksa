@@ -1,0 +1,216 @@
+{
+ "doctype": "DocType",
+ "name": "Engineering Item Request",
+ "module": "Engineering ITAG KSA",
+ "engine": "InnoDB",
+ "autoname": "naming_series",
+ "naming_rule": "By \"Naming Series\" field",
+ "is_submittable": 1,
+ "track_changes": 1,
+ "allow_rename": 0,
+ "allow_import": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "description": "Requests a new Item. Submission creates the Item once.",
+ "field_order": [
+  "naming_series",
+  "item_code",
+  "item_name",
+  "column_break_item",
+  "item_group",
+  "stock_uom",
+  "item_category",
+  "description_section",
+  "description",
+  "links_section",
+  "engineering_drawing",
+  "column_break_links",
+  "material_specification",
+  "result_section",
+  "created_item",
+  "cancellation_section",
+  "cancellation_reason",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Series",
+   "options": "EIR-.#####",
+   "default": "EIR-.#####",
+   "reqd": 1,
+   "set_only_once": 1,
+   "no_copy": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "item_code",
+   "fieldtype": "Data",
+   "label": "Item Code",
+   "reqd": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1
+  },
+  {
+   "fieldname": "item_name",
+   "fieldtype": "Data",
+   "label": "Item Name",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "column_break_item",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "item_group",
+   "fieldtype": "Link",
+   "label": "Item Group",
+   "options": "Item Group",
+   "reqd": 1
+  },
+  {
+   "fieldname": "stock_uom",
+   "fieldtype": "Link",
+   "label": "Stock UOM",
+   "options": "UOM",
+   "reqd": 1
+  },
+  {
+   "fieldname": "item_category",
+   "fieldtype": "Select",
+   "label": "Item Category",
+   "options": "Manufacturing\nPurchase\nRaw Material\nSub-Assembly",
+   "reqd": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "description": "Stored on this request. It is not copied onto the Item."
+  },
+  {
+   "fieldname": "description_section",
+   "fieldtype": "Section Break",
+   "label": "Description"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Text Editor",
+   "label": "Description"
+  },
+  {
+   "fieldname": "links_section",
+   "fieldtype": "Section Break",
+   "label": "Engineering Links"
+  },
+  {
+   "fieldname": "engineering_drawing",
+   "fieldtype": "Link",
+   "label": "Drawing",
+   "options": "Engineering Drawing",
+   "description": "Optional. A selected drawing must be submitted before this request is submitted."
+  },
+  {
+   "fieldname": "column_break_links",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "material_specification",
+   "fieldtype": "Link",
+   "label": "Material Specification",
+   "options": "Material Specification",
+   "description": "Optional. A selected specification must be submitted before this request is submitted."
+  },
+  {
+   "fieldname": "result_section",
+   "fieldtype": "Section Break",
+   "label": "Created Item"
+  },
+  {
+   "fieldname": "created_item",
+   "fieldtype": "Link",
+   "label": "Created Item",
+   "options": "Item",
+   "read_only": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "no_copy": 0
+  },
+  {
+   "fieldname": "cancellation_section",
+   "fieldtype": "Section Break",
+   "label": "Cancellation"
+  },
+  {
+   "fieldname": "cancellation_reason",
+   "fieldtype": "Small Text",
+   "label": "Cancellation Reason",
+   "allow_on_submit": 1,
+   "description": "Required before cancel. The reason is kept on the timeline."
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "options": "Engineering Item Request",
+   "read_only": 1,
+   "print_hide": 1,
+   "no_copy": 1,
+   "search_index": 1
+  }
+ ],
+ "permissions": [
+  {
+   "amend": 1,
+   "cancel": 0,
+   "create": 1,
+   "delete": 0,
+   "email": 0,
+   "export": 1,
+   "import": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "share": 0,
+   "submit": 0,
+   "write": 1,
+   "role": "Engineering User"
+  },
+  {
+   "amend": 1,
+   "cancel": 0,
+   "create": 1,
+   "delete": 0,
+   "email": 0,
+   "export": 1,
+   "import": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "share": 0,
+   "submit": 1,
+   "write": 1,
+   "role": "Engineering Manager"
+  },
+  {
+   "amend": 0,
+   "cancel": 1,
+   "create": 0,
+   "delete": 0,
+   "email": 0,
+   "export": 1,
+   "import": 0,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "share": 0,
+   "submit": 0,
+   "write": 1,
+   "role": "Engineering Manager Master"
+  }
+ ],
+ "actions": [],
+ "links": [],
+ "states": [],
+ "title_field": "item_name",
+ "search_fields": "item_code,item_name"
+}

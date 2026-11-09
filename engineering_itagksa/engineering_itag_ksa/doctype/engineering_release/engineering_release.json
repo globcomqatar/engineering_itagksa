@@ -1,0 +1,227 @@
+{
+ "doctype": "DocType",
+ "name": "Engineering Release",
+ "module": "Engineering ITAG KSA",
+ "engine": "InnoDB",
+ "autoname": "naming_series",
+ "naming_rule": "By \"Naming Series\" field",
+ "is_submittable": 1,
+ "track_changes": 1,
+ "allow_rename": 0,
+ "allow_import": 0,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "description": "Releases one Item and BOM for production.",
+ "field_order": [
+  "naming_series",
+  "workflow_state",
+  "item",
+  "column_break_er",
+  "approved_by",
+  "released_by",
+  "engineering_section",
+  "engineering_drawing",
+  "material_specification",
+  "column_break_engineering",
+  "bom",
+  "routing",
+  "inspection_plan",
+  "return_section",
+  "return_reason",
+  "active_release_key",
+  "cancellation_section",
+  "cancellation_reason",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Series",
+   "options": "ER-.#####",
+   "default": "ER-.#####",
+   "reqd": 1,
+   "set_only_once": 1,
+   "no_copy": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "workflow_state",
+   "fieldtype": "Link",
+   "label": "Status",
+   "options": "Workflow State",
+   "read_only": 1,
+   "no_copy": 1,
+   "allow_on_submit": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "default": "Draft"
+  },
+  {
+   "fieldname": "item",
+   "fieldtype": "Link",
+   "label": "Item",
+   "options": "Item",
+   "reqd": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1
+  },
+  {
+   "fieldname": "column_break_er",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "approved_by",
+   "fieldtype": "Link",
+   "label": "Approved By",
+   "options": "User",
+   "read_only": 1,
+   "no_copy": 1
+  },
+  {
+   "fieldname": "released_by",
+   "fieldtype": "Link",
+   "label": "Released By",
+   "options": "User",
+   "read_only": 1,
+   "no_copy": 1
+  },
+  {
+   "fieldname": "engineering_section",
+   "fieldtype": "Section Break",
+   "label": "Engineering"
+  },
+  {
+   "fieldname": "engineering_drawing",
+   "fieldtype": "Link",
+   "label": "Drawing",
+   "options": "Engineering Drawing"
+  },
+  {
+   "fieldname": "material_specification",
+   "fieldtype": "Link",
+   "label": "Material Specification",
+   "options": "Material Specification"
+  },
+  {
+   "fieldname": "column_break_engineering",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "bom",
+   "fieldtype": "Link",
+   "label": "BOM",
+   "options": "BOM"
+  },
+  {
+   "fieldname": "routing",
+   "fieldtype": "Link",
+   "label": "Routing",
+   "options": "Routing"
+  },
+  {
+   "fieldname": "inspection_plan",
+   "fieldtype": "Link",
+   "label": "Inspection Plan",
+   "options": "Quality Inspection Template",
+   "description": "Optional at every stage."
+  },
+  {
+   "fieldname": "return_section",
+   "fieldtype": "Section Break",
+   "label": "Return"
+  },
+  {
+   "fieldname": "return_reason",
+   "fieldtype": "Small Text",
+   "label": "Return Reason",
+   "description": "Recorded by Engineering Manager Master before Return to Draft."
+  },
+  {
+   "fieldname": "active_release_key",
+   "fieldtype": "Data",
+   "label": "Active Release Key",
+   "hidden": 1,
+   "read_only": 1,
+   "no_copy": 1,
+   "allow_on_submit": 1
+  },
+  {
+   "fieldname": "cancellation_section",
+   "fieldtype": "Section Break",
+   "label": "Cancellation"
+  },
+  {
+   "fieldname": "cancellation_reason",
+   "fieldtype": "Small Text",
+   "label": "Cancellation Reason",
+   "allow_on_submit": 1,
+   "description": "Required before cancel. The reason is kept on the timeline."
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "options": "Engineering Release",
+   "read_only": 1,
+   "print_hide": 1,
+   "no_copy": 1,
+   "search_index": 1
+  }
+ ],
+ "permissions": [
+  {
+   "amend": 1,
+   "cancel": 0,
+   "create": 1,
+   "delete": 0,
+   "email": 0,
+   "export": 1,
+   "import": 0,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "share": 0,
+   "submit": 0,
+   "write": 1,
+   "role": "Engineering User"
+  },
+  {
+   "amend": 1,
+   "cancel": 0,
+   "create": 1,
+   "delete": 0,
+   "email": 0,
+   "export": 1,
+   "import": 0,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "share": 0,
+   "submit": 0,
+   "write": 1,
+   "role": "Engineering Manager"
+  },
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "delete": 0,
+   "email": 0,
+   "export": 1,
+   "import": 0,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "share": 0,
+   "submit": 1,
+   "write": 1,
+   "role": "Engineering Manager Master"
+  }
+ ],
+ "actions": [],
+ "links": [],
+ "states": [],
+ "title_field": "item",
+ "search_fields": "item,bom,workflow_state"
+}
