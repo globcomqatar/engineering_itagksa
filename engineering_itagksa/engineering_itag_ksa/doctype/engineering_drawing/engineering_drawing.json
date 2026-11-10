@@ -1,0 +1,372 @@
+{
+ "actions": [],
+ "autoname": ".item_component.-5.####.-.revision.",
+ "creation": "2026-11-01 15:30:00.000000",
+ "custom": 0,
+ "doctype": "DocType",
+ "editable_grid": 0,
+ "engine": "InnoDB",
+ "field_order": [
+  "details_tab",
+  "drawing_name",
+  "item_group",
+  "item_component",
+  "revision",
+  "revises",
+  "drawing_type",
+  "cb_1",
+  "workflow_state",
+  "security_classification",
+  "applicable_standard",
+  "file_section",
+  "external_file_link",
+  "drawing_file",
+  "file_checksum_sha256",
+  "checksum_attestation_note",
+  "cb_2",
+  "checksum_attested",
+  "checksum_attested_by",
+  "checksum_attested_on",
+  "dates_section",
+  "revision_date",
+  "effective_date",
+  "cb_3",
+  "superseded_date",
+  "superseded_by",
+  "change_section",
+  "change_description",
+  "review_section",
+  "submitted_for_review_by",
+  "submitted_for_review_on",
+  "cb_4",
+  "approved_by",
+  "approved_on",
+  "source_item_request",
+  "connections_tab"
+ ],
+ "fields": [
+  {
+   "fieldname": "details_tab",
+   "fieldtype": "Tab Break",
+   "label": "Details"
+  },
+  {
+   "fieldname": "drawing_name",
+   "fieldtype": "Data",
+   "label": "Drawing Name",
+   "reqd": 1,
+   "in_list_view": 1,
+   "in_global_search": 1,
+   "bold": 1
+  },
+  {
+   "fieldname": "item_group",
+   "fieldtype": "Link",
+   "label": "Item Group",
+   "options": "Item Group",
+   "in_standard_filter": 1
+  },
+  {
+   "fieldname": "item_component",
+   "fieldtype": "Link",
+   "label": "Item Component",
+   "options": "Item Component",
+   "reqd": 1,
+   "set_only_once": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "revision",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Revision",
+   "set_only_once": 1,
+   "in_standard_filter": 1,
+   "read_only": 1,
+   "default": "0"
+  },
+  {
+   "fieldname": "revises",
+   "fieldtype": "Link",
+   "label": "Revises",
+   "options": "Engineering Drawing",
+   "search_index": 1,
+   "no_copy": 1,
+   "description": "Set by Create Revision: the drawing this revision replaces. When this drawing is Approved, that drawing becomes Superseded automatically.",
+   "hidden": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "drawing_type",
+   "fieldtype": "Select",
+   "label": "Drawing Type",
+   "options": "Assembly\nDetail\nSchematic\nGeneral Arrangement",
+   "reqd": 1
+  },
+  {
+   "fieldname": "cb_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "allow_on_submit": 0,
+   "default": "Draft",
+   "fieldname": "workflow_state",
+   "fieldtype": "Select",
+   "hidden": 0,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "no_copy": 1,
+   "options": "Draft\nUnder Review\nApproved\nSuperseded\nObsolete",
+   "read_only": 1
+  },
+  {
+   "default": "Internal",
+   "fieldname": "security_classification",
+   "fieldtype": "Select",
+   "in_standard_filter": 1,
+   "label": "Security Classification",
+   "options": "Internal\nConfidential\nCustomer Controlled",
+   "reqd": 1
+  },
+  {
+   "fieldname": "applicable_standard",
+   "fieldtype": "Data",
+   "label": "Applicable Standard"
+  },
+  {
+   "fieldname": "file_section",
+   "fieldtype": "Section Break",
+   "label": "Drawing File and Checksum Attestation"
+  },
+  {
+   "fieldname": "external_file_link",
+   "fieldtype": "Small Text",
+   "label": "External File Link"
+  },
+  {
+   "fieldname": "drawing_file",
+   "fieldtype": "Attach",
+   "label": "Drawing File"
+  },
+  {
+   "fieldname": "file_checksum_sha256",
+   "fieldtype": "Data",
+   "label": "File Checksum (SHA-256)",
+   "length": 64,
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "checksum_attestation_note",
+   "fieldtype": "Small Text",
+   "label": "Checksum Attestation Note"
+  },
+  {
+   "fieldname": "cb_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "checksum_attested",
+   "fieldtype": "Check",
+   "label": "Checksum Attested",
+   "no_copy": 1
+  },
+  {
+   "fieldname": "checksum_attested_by",
+   "fieldtype": "Link",
+   "label": "Checksum Attested By",
+   "no_copy": 1,
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "checksum_attested_on",
+   "fieldtype": "Datetime",
+   "label": "Checksum Attested On",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "dates_section",
+   "fieldtype": "Section Break",
+   "label": "Revision Dates"
+  },
+  {
+   "fieldname": "revision_date",
+   "fieldtype": "Date",
+   "label": "Revision Date"
+  },
+  {
+   "fieldname": "effective_date",
+   "fieldtype": "Date",
+   "label": "Effective Date"
+  },
+  {
+   "fieldname": "cb_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "superseded_date",
+   "fieldtype": "Date",
+   "label": "Superseded Date",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "superseded_by",
+   "fieldtype": "Link",
+   "label": "Superseded By",
+   "no_copy": 1,
+   "options": "Engineering Drawing",
+   "read_only": 1
+  },
+  {
+   "fieldname": "change_section",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "change_description",
+   "fieldtype": "Small Text",
+   "label": "Change Description"
+  },
+  {
+   "fieldname": "review_section",
+   "fieldtype": "Section Break",
+   "label": "Review and Approval",
+   "collapsible": 1
+  },
+  {
+   "fieldname": "submitted_for_review_by",
+   "fieldtype": "Link",
+   "label": "Submitted for Review By",
+   "options": "User",
+   "read_only": 1,
+   "no_copy": 1
+  },
+  {
+   "fieldname": "submitted_for_review_on",
+   "fieldtype": "Datetime",
+   "label": "Submitted for Review On",
+   "read_only": 1,
+   "no_copy": 1
+  },
+  {
+   "fieldname": "cb_4",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "approved_by",
+   "fieldtype": "Link",
+   "label": "Approved By",
+   "options": "User",
+   "read_only": 1,
+   "no_copy": 1
+  },
+  {
+   "fieldname": "approved_on",
+   "fieldtype": "Datetime",
+   "label": "Approved On",
+   "read_only": 1,
+   "no_copy": 1
+  },
+  {
+   "fieldname": "source_item_request",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Source Item Request",
+   "no_copy": 1,
+   "options": "Engineering Item Request",
+   "print_hide": 1,
+   "read_only": 1,
+   "report_hide": 1
+  },
+  {
+   "fieldname": "connections_tab",
+   "fieldtype": "Tab Break",
+   "label": "Connections",
+   "show_dashboard": 1
+  }
+ ],
+ "is_submittable": 0,
+ "istable": 0,
+ "links": [],
+ "modified": "2026-11-10 13:20:00.000000",
+ "modified_by": "Administrator",
+ "module": "Engineering ITAG KSA",
+ "name": "Engineering Drawing",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 0,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 0,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Engineering Manager",
+   "share": 0,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 0,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Engineering User",
+   "share": 0,
+   "write": 1
+  },
+  {
+   "email": 0,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Manufacturing Manager",
+   "share": 0
+  },
+  {
+   "email": 0,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Manufacturing User",
+   "share": 0
+  },
+  {
+   "email": 0,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Quality Manager",
+   "share": 0
+  }
+ ],
+ "search_fields": "drawing_name,item_component,revision,workflow_state",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1,
+ "title_field": "drawing_name",
+ "show_title_field_in_link": 0
+}

@@ -1,0 +1,274 @@
+{
+ "actions": [],
+ "autoname": "ECR-.YYYY.-.#####",
+ "creation": "2026-11-01 15:30:00.000000",
+ "custom": 0,
+ "description": "ECR never modifies Item or any linked document (B7).",
+ "doctype": "DocType",
+ "editable_grid": 0,
+ "engine": "InnoDB",
+ "field_order": [
+  "item",
+  "urgency",
+  "cb_1",
+  "workflow_state",
+  "cost_impact",
+  "desc_section",
+  "description",
+  "affected_section",
+  "affected_drawing",
+  "affected_bom",
+  "affected_routing",
+  "affected_objects",
+  "impact_section",
+  "safety_impact",
+  "customer_impact",
+  "production_impact",
+  "cb_2",
+  "quality_impact",
+  "compliance_impact",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "item",
+   "fieldtype": "Link",
+   "idx": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Item",
+   "options": "Item",
+   "reqd": 1,
+   "search_index": 1
+  },
+  {
+   "default": "Medium",
+   "fieldname": "urgency",
+   "fieldtype": "Select",
+   "idx": 2,
+   "in_list_view": 1,
+   "label": "Urgency",
+   "options": "Low\nMedium\nHigh\nCritical"
+  },
+  {
+   "fieldname": "cb_1",
+   "fieldtype": "Column Break",
+   "idx": 3
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "Draft",
+   "description": "Draft / Under Review / Rejected while editing. Submit sets Approved (a Rejected request stays Rejected). Cancel sets Cancelled.",
+   "fieldname": "workflow_state",
+   "fieldtype": "Select",
+   "hidden": 0,
+   "idx": 4,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "no_copy": 1,
+   "options": "Draft\nUnder Review\nApproved\nRejected\nCancelled",
+   "read_only": 0
+  },
+  {
+   "fieldname": "cost_impact",
+   "fieldtype": "Currency",
+   "idx": 5,
+   "label": "Cost Impact"
+  },
+  {
+   "fieldname": "desc_section",
+   "fieldtype": "Section Break",
+   "idx": 6,
+   "label": "Change Requested"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Text",
+   "idx": 7,
+   "label": "Description / Reason",
+   "reqd": 1
+  },
+  {
+   "fieldname": "affected_section",
+   "fieldtype": "Section Break",
+   "idx": 8,
+   "label": "Affected Objects"
+  },
+  {
+   "fieldname": "affected_drawing",
+   "fieldtype": "Link",
+   "idx": 9,
+   "label": "Affected Drawing",
+   "options": "Engineering Drawing"
+  },
+  {
+   "fieldname": "affected_bom",
+   "fieldtype": "Link",
+   "idx": 10,
+   "label": "Affected BOM",
+   "options": "BOM"
+  },
+  {
+   "fieldname": "affected_routing",
+   "fieldtype": "Link",
+   "idx": 11,
+   "label": "Affected Routing",
+   "options": "Routing"
+  },
+  {
+   "fieldname": "affected_objects",
+   "fieldtype": "Table",
+   "idx": 12,
+   "label": "Affected Objects",
+   "options": "Engineering Change Affected Object"
+  },
+  {
+   "fieldname": "impact_section",
+   "fieldtype": "Section Break",
+   "idx": 13,
+   "label": "Impact"
+  },
+  {
+   "default": "None",
+   "fieldname": "safety_impact",
+   "fieldtype": "Select",
+   "idx": 14,
+   "label": "Safety Impact",
+   "options": "None\nLow\nMedium\nHigh"
+  },
+  {
+   "default": "None",
+   "fieldname": "customer_impact",
+   "fieldtype": "Select",
+   "idx": 15,
+   "label": "Customer Impact",
+   "options": "None\nLow\nMedium\nHigh"
+  },
+  {
+   "default": "None",
+   "fieldname": "production_impact",
+   "fieldtype": "Select",
+   "idx": 16,
+   "label": "Production Impact",
+   "options": "None\nLow\nMedium\nHigh"
+  },
+  {
+   "fieldname": "cb_2",
+   "fieldtype": "Column Break",
+   "idx": 17
+  },
+  {
+   "default": "None",
+   "fieldname": "quality_impact",
+   "fieldtype": "Select",
+   "idx": 18,
+   "label": "Quality Impact",
+   "options": "None\nLow\nMedium\nHigh"
+  },
+  {
+   "default": "None",
+   "fieldname": "compliance_impact",
+   "fieldtype": "Select",
+   "idx": 19,
+   "label": "Compliance Impact",
+   "options": "None\nLow\nMedium\nHigh"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "idx": 20,
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Engineering Change Request",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  }
+ ],
+ "is_submittable": 1,
+ "istable": 0,
+ "links": [],
+ "modified": "2026-11-02 15:30:00.000000",
+ "modified_by": "Administrator",
+ "module": "Engineering ITAG KSA",
+ "name": "Engineering Change Request",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 0,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "email": 0,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Engineering Manager",
+   "share": 0,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 0,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Engineering User",
+   "share": 0,
+   "write": 1
+  },
+  {
+   "email": 0,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Manufacturing Manager",
+   "share": 0
+  },
+  {
+   "email": 0,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Manufacturing User",
+   "share": 0
+  },
+  {
+   "email": 0,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Quality Manager",
+   "share": 0
+  }
+ ],
+ "search_fields": "item,workflow_state",
+ "show_title_field_in_link": 0,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "item",
+ "track_changes": 1
+}

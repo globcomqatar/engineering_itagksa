@@ -1,0 +1,22 @@
+{
+ "color": "#5e64ff",
+ "creation": "2026-11-01 17:00:00.000000",
+ "docstatus": 0,
+ "doctype": "Number Card",
+ "document_type": "Engineering Drawing",
+ "dynamic_filters_json": "[]",
+ "filters_json": "[[\"Engineering Drawing\", \"workflow_state\", \"=\", \"Under Review\", false]]",
+ "function": "Count",
+ "idx": 0,
+ "is_public": 1,
+ "is_standard": 1,
+ "label": "Drawings Under Review",
+ "modified": "2026-11-01 17:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Engineering ITAG KSA",
+ "name": "Drawings Under Review",
+ "owner": "Administrator",
+ "show_percentage_stats": 0,
+ "stats_time_interval": "Monthly",
+ "type": "Document Type"
+}

@@ -1,0 +1,311 @@
+{
+ "charts": [
+  {
+   "chart_name": "Engineering Release Status",
+   "label": "Engineering Release Status"
+  }
+ ],
+ "content": "[{\"id\": \"aPppvN9whF\", \"type\": \"chart\", \"data\": {\"chart_name\": \"Engineering Release Status\", \"col\": 12}}, {\"id\": \"lnLdBwBJLP\", \"type\": \"spacer\", \"data\": {\"col\": 12}}, {\"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Your Shortcuts</b></span>\", \"col\": 12}, \"id\": \"7AvHRe0zLd\"}, {\"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Engineering Item Request\", \"col\": 3}, \"id\": \"OK0LE2Fs4B\"}, {\"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Material Specification\", \"col\": 3}, \"id\": \"yHcvM4oVQe\"}, {\"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Engineering Drawing\", \"col\": 3}, \"id\": \"0ldObH8qAR\"}, {\"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Product Revision\", \"col\": 3}, \"id\": \"DVItzp5gWU\"}, {\"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Engineering Release\", \"col\": 3}, \"id\": \"Hi4631q5dT\"}, {\"id\": \"MerShort01\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Master Engineering Release\", \"col\": 3}}, {\"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Engineering Change Request\", \"col\": 3}, \"id\": \"fJiMdkAPrn\"}, {\"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Engineering Change Order\", \"col\": 3}, \"id\": \"PteNLjD2nC\"}, {\"id\": \"bp4lIKxva6\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Engineering Dashboard\", \"col\": 3}}, {\"type\": \"spacer\", \"data\": {\"col\": 12}, \"id\": \"vsuQIhi00F\"}, {\"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Reports &amp; Masters</b></span>\", \"col\": 12}, \"id\": \"Vjlly3fNHT\"}, {\"type\": \"card\", \"data\": {\"card_name\": \"Requests & Specs\", \"col\": 4}, \"id\": \"39w1ofLuqs\"}, {\"type\": \"card\", \"data\": {\"card_name\": \"Drawings & Revisions\", \"col\": 4}, \"id\": \"qpkBHp4xwj\"}, {\"type\": \"card\", \"data\": {\"card_name\": \"Manufacturing\", \"col\": 4}, \"id\": \"St3HrBYazi\"}, {\"type\": \"card\", \"data\": {\"card_name\": \"Release & Change\", \"col\": 6}, \"id\": \"ZhcvZEfYVq\"}, {\"type\": \"card\", \"data\": {\"card_name\": \"Configuration and Settings\", \"col\": 6}, \"id\": \"Tqs1rxbTGj\"}]",
+ "creation": "2026-11-04 11:48:13.055538",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "tool",
+ "idx": 0,
+ "is_hidden": 0,
+ "label": "Engineering",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Requests & Specs",
+   "link_count": 4,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Engineering Item Request",
+   "link_count": 0,
+   "link_to": "Engineering Item Request",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Material Specification",
+   "link_count": 0,
+   "link_to": "Material Specification",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Item Component",
+   "link_count": 0,
+   "link_to": "Item Component",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Item Spec Attribute",
+   "link_count": 0,
+   "link_to": "Item Spec Attribute",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Drawings & Revisions",
+   "link_count": 2,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Engineering Drawing",
+   "link_count": 0,
+   "link_to": "Engineering Drawing",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Product Revision",
+   "link_count": 0,
+   "link_to": "Product Revision",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Manufacturing",
+   "link_count": 4,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Item",
+   "link_count": 0,
+   "link_to": "Item",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "BOM",
+   "link_count": 0,
+   "link_to": "BOM",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Multiple BOM",
+   "link_count": 0,
+   "link_to": "BOM Creator",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Work Order",
+   "link_count": 0,
+   "link_to": "Work Order",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Release & Change",
+   "link_count": 4,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Engineering Release",
+   "link_count": 0,
+   "link_to": "Engineering Release",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Master Engineering Release",
+   "link_count": 0,
+   "link_to": "Master Engineering Release",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Engineering Change Request",
+   "link_count": 0,
+   "link_to": "Engineering Change Request",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Engineering Change Order",
+   "link_count": 0,
+   "link_to": "Engineering Change Order",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Configuration and Settings",
+   "link_count": 2,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Engineering Approval Matrix",
+   "link_count": 0,
+   "link_to": "Engineering Approval Matrix",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Engineering Settings",
+   "link_count": 0,
+   "link_to": "Engineering Settings",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-11-10 13:20:00.000000",
+ "modified_by": "Administrator",
+ "module": "Engineering ITAG KSA",
+ "name": "Engineering",
+ "number_cards": [],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "restrict_to_domain": "",
+ "roles": [],
+ "sequence_id": 8.5,
+ "shortcuts": [
+  {
+   "color": "Blue",
+   "label": "Engineering Item Request",
+   "link_to": "Engineering Item Request",
+   "type": "DocType"
+  },
+  {
+   "color": "Cyan",
+   "label": "Material Specification",
+   "link_to": "Material Specification",
+   "type": "DocType"
+  },
+  {
+   "color": "Purple",
+   "label": "Engineering Drawing",
+   "link_to": "Engineering Drawing",
+   "type": "DocType"
+  },
+  {
+   "color": "Orange",
+   "label": "Product Revision",
+   "link_to": "Product Revision",
+   "type": "DocType"
+  },
+  {
+   "color": "Green",
+   "label": "Engineering Release",
+   "link_to": "Engineering Release",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "label": "Master Engineering Release",
+   "link_to": "Master Engineering Release",
+   "type": "DocType"
+  },
+  {
+   "color": "Yellow",
+   "label": "Engineering Change Request",
+   "link_to": "Engineering Change Request",
+   "type": "DocType"
+  },
+  {
+   "color": "Pink",
+   "label": "Engineering Change Order",
+   "link_to": "Engineering Change Order",
+   "type": "DocType"
+  },
+  {
+   "color": "Blue",
+   "label": "Engineering Dashboard",
+   "link_to": "Engineering",
+   "type": "Dashboard"
+  }
+ ],
+ "title": "Engineering"
+}

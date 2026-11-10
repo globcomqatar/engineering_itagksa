@@ -1,0 +1,377 @@
+{
+ "actions": [],
+ "autoname": "ER-.YYYY.-.#####",
+ "creation": "2026-11-01 15:30:00.000000",
+ "custom": 0,
+ "doctype": "DocType",
+ "editable_grid": 0,
+ "engine": "InnoDB",
+ "field_order": [
+  "release_status",
+  "release_classification",
+  "effective_datetime",
+  "cb_1",
+  "company",
+  "facility",
+  "release_checksum",
+  "baseline_section",
+  "item",
+  "product_revision",
+  "drawing_revision",
+  "material_specification",
+  "cb_2",
+  "bom",
+  "routing",
+  "inspection_plan",
+  "applicable_standards",
+  "context_section",
+  "customer",
+  "project",
+  "cb_3",
+  "applicable_eco",
+  "superseded_release",
+  "superseded_by_release",
+  "master_engineering_release",
+  "checklist_section",
+  "release_checklist",
+  "distribution_section",
+  "release_distribution",
+  "approval_section",
+  "approval_rule",
+  "approval_requirements"
+ ],
+ "fields": [
+  {
+   "default": "Draft",
+   "fieldname": "release_status",
+   "fieldtype": "Link",
+   "idx": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Release Status",
+   "no_copy": 1,
+   "options": "Workflow State",
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "default": "Standard",
+   "fieldname": "release_classification",
+   "fieldtype": "Select",
+   "idx": 2,
+   "label": "Release Classification",
+   "options": "Standard\nCustomer-Specific\nEmergency",
+   "reqd": 1
+  },
+  {
+   "fieldname": "effective_datetime",
+   "fieldtype": "Datetime",
+   "idx": 3,
+   "label": "Effective Datetime",
+   "reqd": 1
+  },
+  {
+   "fieldname": "cb_1",
+   "fieldtype": "Column Break",
+   "idx": 4
+  },
+  {
+   "fetch_from": "bom.company",
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "idx": 5,
+   "label": "Company",
+   "options": "Company",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "facility",
+   "fieldtype": "Data",
+   "idx": 6,
+   "label": "Facility"
+  },
+  {
+   "description": "SHA-256 over the release baseline, computed by the server at Released for Production.",
+   "fieldname": "release_checksum",
+   "fieldtype": "Data",
+   "idx": 7,
+   "label": "Release Checksum",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "baseline_section",
+   "fieldtype": "Section Break",
+   "idx": 8,
+   "label": "Baseline"
+  },
+  {
+   "fieldname": "item",
+   "fieldtype": "Link",
+   "idx": 9,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Item",
+   "options": "Item",
+   "reqd": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "product_revision",
+   "fieldtype": "Link",
+   "idx": 10,
+   "label": "Product Revision",
+   "options": "Product Revision",
+   "reqd": 1
+  },
+  {
+   "fieldname": "drawing_revision",
+   "fieldtype": "Link",
+   "idx": 11,
+   "label": "Drawing Revision",
+   "options": "Engineering Drawing",
+   "reqd": 1
+  },
+  {
+   "fieldname": "material_specification",
+   "fieldtype": "Link",
+   "label": "Material Specification",
+   "options": "Material Specification",
+   "idx": 12
+  },
+  {
+   "fieldname": "cb_2",
+   "fieldtype": "Column Break",
+   "idx": 13
+  },
+  {
+   "fieldname": "bom",
+   "fieldtype": "Link",
+   "idx": 14,
+   "label": "BOM",
+   "options": "BOM",
+   "reqd": 1
+  },
+  {
+   "fieldname": "routing",
+   "fieldtype": "Link",
+   "idx": 15,
+   "label": "Routing",
+   "options": "Routing"
+  },
+  {
+   "fieldname": "inspection_plan",
+   "fieldtype": "Link",
+   "idx": 16,
+   "label": "Inspection Plan (Quality Inspection Template)",
+   "options": "Quality Inspection Template"
+  },
+  {
+   "fieldname": "applicable_standards",
+   "fieldtype": "Small Text",
+   "idx": 17,
+   "label": "Applicable Standards"
+  },
+  {
+   "fieldname": "context_section",
+   "fieldtype": "Section Break",
+   "idx": 18,
+   "label": "Context"
+  },
+  {
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "idx": 19,
+   "label": "Customer",
+   "options": "Customer"
+  },
+  {
+   "fieldname": "project",
+   "fieldtype": "Link",
+   "idx": 20,
+   "label": "Project",
+   "options": "Project"
+  },
+  {
+   "fieldname": "cb_3",
+   "fieldtype": "Column Break",
+   "idx": 21
+  },
+  {
+   "fieldname": "applicable_eco",
+   "fieldtype": "Link",
+   "idx": 22,
+   "label": "Applicable ECO",
+   "options": "Engineering Change Order"
+  },
+  {
+   "fieldname": "superseded_release",
+   "fieldtype": "Link",
+   "idx": 23,
+   "label": "Supersedes Release",
+   "no_copy": 1,
+   "options": "Engineering Release",
+   "read_only": 1
+  },
+  {
+   "fieldname": "superseded_by_release",
+   "fieldtype": "Link",
+   "idx": 24,
+   "label": "Superseded By",
+   "no_copy": 1,
+   "options": "Engineering Release",
+   "read_only": 1
+  },
+  {
+   "fieldname": "master_engineering_release",
+   "fieldtype": "Link",
+   "label": "Master Release",
+   "options": "Master Engineering Release",
+   "read_only": 1,
+   "no_copy": 1,
+   "search_index": 1,
+   "idx": 25
+  },
+  {
+   "fieldname": "checklist_section",
+   "fieldtype": "Section Break",
+   "idx": 26,
+   "label": "Release Checklist"
+  },
+  {
+   "fieldname": "release_checklist",
+   "fieldtype": "Table",
+   "idx": 27,
+   "label": "Release Checklist",
+   "options": "Engineering Release Checklist"
+  },
+  {
+   "fieldname": "distribution_section",
+   "fieldtype": "Section Break",
+   "idx": 28,
+   "label": "Release Distribution"
+  },
+  {
+   "fieldname": "release_distribution",
+   "fieldtype": "Table",
+   "idx": 29,
+   "label": "Release Distribution",
+   "options": "Engineering Release Distribution"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "approval_section",
+   "fieldtype": "Section Break",
+   "idx": 30,
+   "label": "Approval Matrix (resolver)"
+  },
+  {
+   "fieldname": "approval_rule",
+   "fieldtype": "Link",
+   "idx": 31,
+   "label": "Matched Approval Rule",
+   "no_copy": 1,
+   "options": "Engineering Approval Matrix",
+   "read_only": 1
+  },
+  {
+   "fieldname": "approval_requirements",
+   "fieldtype": "Small Text",
+   "idx": 32,
+   "label": "Approval Requirements",
+   "no_copy": 1,
+   "read_only": 1
+  }
+ ],
+ "is_submittable": 0,
+ "istable": 0,
+ "links": [],
+ "modified": "2026-11-10 13:20:00.000000",
+ "modified_by": "Administrator",
+ "module": "Engineering ITAG KSA",
+ "name": "Engineering Release",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 0,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 0,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 0,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Engineering Manager",
+   "share": 0,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 0,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Engineering Manager Master",
+   "share": 0,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 0,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Engineering User",
+   "share": 0,
+   "write": 1
+  },
+  {
+   "email": 0,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Manufacturing Manager",
+   "share": 0
+  },
+  {
+   "email": 0,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Manufacturing User",
+   "share": 0
+  },
+  {
+   "email": 0,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Quality Manager",
+   "share": 0
+  }
+ ],
+ "search_fields": "item,product_revision,release_status",
+ "show_title_field_in_link": 0,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "item",
+ "track_changes": 1
+}

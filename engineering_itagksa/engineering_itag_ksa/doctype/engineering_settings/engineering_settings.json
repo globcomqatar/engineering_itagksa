@@ -1,0 +1,102 @@
+{
+ "actions": [],
+ "creation": "2026-11-02 11:45:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "defaults_section",
+  "default_company",
+  "column_break_defaults",
+  "item_naming_prefix_digits",
+  "work_order_section",
+  "require_release_for_manufacturing",
+  "notes_section",
+  "note"
+ ],
+ "fields": [
+  {
+   "fieldname": "defaults_section",
+   "fieldtype": "Section Break",
+   "label": "Defaults"
+  },
+  {
+   "fieldname": "default_company",
+   "fieldtype": "Link",
+   "label": "Default Company",
+   "options": "Company"
+  },
+  {
+   "fieldname": "column_break_defaults",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "5",
+   "fieldname": "item_naming_prefix_digits",
+   "fieldtype": "Int",
+   "label": "Item Naming Prefix Digits",
+   "non_negative": 1,
+   "description": "Fixed at 7 for Item Component codes: <Part Code Prefix>-1000501, then 1000502, and so on (past 1000599 to 1000600). Other values are reset to 7 on save."
+  },
+  {
+   "fieldname": "work_order_section",
+   "fieldtype": "Section Break",
+   "label": "Work Order Gate"
+  },
+  {
+   "default": "1",
+   "fieldname": "require_release_for_manufacturing",
+   "fieldtype": "Check",
+   "label": "Require Engineering Release for Manufacturing / Sub-Assembly Items before Work Order"
+  },
+  {
+   "fieldname": "notes_section",
+   "fieldtype": "Section Break",
+   "label": "Notes"
+  },
+  {
+   "fieldname": "note",
+   "fieldtype": "Small Text",
+   "label": "Note"
+  }
+ ],
+ "index_web_pages_for_search": 0,
+ "issingle": 1,
+ "links": [],
+ "modified": "2026-11-09 18:35:00.000000",
+ "modified_by": "Administrator",
+ "module": "Engineering ITAG KSA",
+ "name": "Engineering Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 0,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 0,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 0,
+   "print": 1,
+   "read": 1,
+   "role": "Engineering Manager",
+   "share": 0,
+   "write": 1
+  },
+  {
+   "email": 0,
+   "print": 1,
+   "read": 1,
+   "role": "Engineering User",
+   "share": 0
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

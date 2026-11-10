@@ -1,0 +1,61 @@
+{
+ "actions": [],
+ "creation": "2026-11-01 15:30:00.000000",
+ "custom": 0,
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "requirement_type",
+  "description",
+  "acceptance_criteria",
+  "is_mandatory"
+ ],
+ "fields": [
+  {
+   "fieldname": "requirement_type",
+   "fieldtype": "Select",
+   "idx": 1,
+   "in_list_view": 1,
+   "label": "Requirement Type",
+   "options": "Design\nMaterial\nPressure\nTemperature\nTesting\nCertification\nDimensional\nOther",
+   "reqd": 1
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "idx": 2,
+   "in_list_view": 1,
+   "label": "Description",
+   "reqd": 1
+  },
+  {
+   "fieldname": "acceptance_criteria",
+   "fieldtype": "Small Text",
+   "idx": 3,
+   "in_list_view": 1,
+   "label": "Acceptance Criteria"
+  },
+  {
+   "default": "1",
+   "fieldname": "is_mandatory",
+   "fieldtype": "Check",
+   "idx": 4,
+   "in_list_view": 1,
+   "label": "Mandatory"
+  }
+ ],
+ "is_submittable": 0,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-11-01 15:30:00.000000",
+ "modified_by": "Administrator",
+ "module": "Engineering ITAG KSA",
+ "name": "Material Specification Critical Requirement",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 0
+}

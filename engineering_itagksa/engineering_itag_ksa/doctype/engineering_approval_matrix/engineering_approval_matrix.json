@@ -1,0 +1,224 @@
+{
+ "actions": [],
+ "autoname": "field:rule_name",
+ "creation": "2026-11-01 15:30:00.000000",
+ "custom": 0,
+ "description": "Resolver only (B1): returns required roles/disciplines and review flags; never holds or sets status.",
+ "doctype": "DocType",
+ "editable_grid": 0,
+ "engine": "InnoDB",
+ "field_order": [
+  "rule_name",
+  "is_active",
+  "priority",
+  "applies_to",
+  "cb_1",
+  "effective_from",
+  "effective_to",
+  "cost_impact_threshold",
+  "scope_section",
+  "company",
+  "product_family",
+  "item_category",
+  "safety_classification",
+  "cb_2",
+  "change_risk",
+  "is_customer_specific",
+  "is_regulatory",
+  "outputs_section",
+  "requires_cost_review",
+  "requires_customer_review",
+  "required_disciplines"
+ ],
+ "fields": [
+  {
+   "fieldname": "rule_name",
+   "fieldtype": "Data",
+   "idx": 1,
+   "label": "Rule Name",
+   "reqd": 1,
+   "set_only_once": 1,
+   "unique": 1
+  },
+  {
+   "default": "1",
+   "fieldname": "is_active",
+   "fieldtype": "Check",
+   "idx": 2,
+   "label": "Is Active"
+  },
+  {
+   "default": "10",
+   "description": "Lower number wins when several rules match.",
+   "fieldname": "priority",
+   "fieldtype": "Int",
+   "idx": 3,
+   "label": "Priority"
+  },
+  {
+   "description": "Blank = both Engineering Release and Engineering Change Order.",
+   "fieldname": "applies_to",
+   "fieldtype": "Select",
+   "idx": 4,
+   "label": "Applies To",
+   "options": "\nEngineering Release\nEngineering Change Order"
+  },
+  {
+   "fieldname": "cb_1",
+   "fieldtype": "Column Break",
+   "idx": 5
+  },
+  {
+   "fieldname": "effective_from",
+   "fieldtype": "Date",
+   "idx": 6,
+   "label": "Effective From"
+  },
+  {
+   "fieldname": "effective_to",
+   "fieldtype": "Date",
+   "idx": 7,
+   "label": "Effective To"
+  },
+  {
+   "description": "0 = any. Rule matches when context cost impact >= threshold.",
+   "fieldname": "cost_impact_threshold",
+   "fieldtype": "Currency",
+   "idx": 8,
+   "label": "Cost Impact Threshold"
+  },
+  {
+   "fieldname": "scope_section",
+   "fieldtype": "Section Break",
+   "idx": 9,
+   "label": "Scope (blank = any)"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "idx": 10,
+   "label": "Company",
+   "options": "Company"
+  },
+  {
+   "description": "Matches the item's Item Group or any child group.",
+   "fieldname": "product_family",
+   "fieldtype": "Link",
+   "idx": 11,
+   "label": "Product Family",
+   "options": "Item Group"
+  },
+  {
+   "fieldname": "item_category",
+   "fieldtype": "Select",
+   "idx": 12,
+   "label": "Item Category",
+   "options": "\nManufacturing\nPurchase\nRaw Material\nSub-Assembly"
+  },
+  {
+   "fieldname": "safety_classification",
+   "fieldtype": "Select",
+   "idx": 13,
+   "label": "Safety Classification",
+   "options": "\nNone\nLow\nMedium\nHigh"
+  },
+  {
+   "fieldname": "cb_2",
+   "fieldtype": "Column Break",
+   "idx": 14
+  },
+  {
+   "fieldname": "change_risk",
+   "fieldtype": "Select",
+   "idx": 15,
+   "label": "Change Risk",
+   "options": "\nLow\nMedium\nHigh"
+  },
+  {
+   "fieldname": "is_customer_specific",
+   "fieldtype": "Select",
+   "idx": 16,
+   "label": "Is Customer Specific",
+   "options": "\nYes\nNo"
+  },
+  {
+   "fieldname": "is_regulatory",
+   "fieldtype": "Select",
+   "idx": 17,
+   "label": "Is Regulatory",
+   "options": "\nYes\nNo"
+  },
+  {
+   "fieldname": "outputs_section",
+   "fieldtype": "Section Break",
+   "idx": 18,
+   "label": "Resolver outputs (no status is held here)"
+  },
+  {
+   "fieldname": "requires_cost_review",
+   "fieldtype": "Check",
+   "idx": 19,
+   "label": "Requires Cost Review"
+  },
+  {
+   "fieldname": "requires_customer_review",
+   "fieldtype": "Check",
+   "idx": 20,
+   "label": "Requires Customer Review"
+  },
+  {
+   "fieldname": "required_disciplines",
+   "fieldtype": "Table",
+   "idx": 21,
+   "label": "Required Disciplines",
+   "options": "Engineering Approval Matrix Discipline"
+  }
+ ],
+ "is_submittable": 0,
+ "istable": 0,
+ "links": [],
+ "modified": "2026-11-01 15:30:00.000000",
+ "modified_by": "Administrator",
+ "module": "Engineering ITAG KSA",
+ "name": "Engineering Approval Matrix",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 0,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 0,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 0,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Engineering Manager",
+   "share": 0,
+   "write": 1
+  },
+  {
+   "email": 0,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Engineering User",
+   "share": 0
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

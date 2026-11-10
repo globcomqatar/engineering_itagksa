@@ -1,0 +1,309 @@
+{
+ "actions": [],
+ "allow_rename": 0,
+ "autoname": "naming_series:",
+ "creation": "2026-11-04 16:00:00.000000",
+ "modified": "2026-11-04 16:00:00.000000",
+ "modified_by": "Administrator",
+ "owner": "Administrator",
+ "doctype": "DocType",
+ "editable_grid": 0,
+ "engine": "InnoDB",
+ "is_submittable": 0,
+ "istable": 0,
+ "links": [],
+ "module": "Engineering ITAG KSA",
+ "name": "Master Engineering Release",
+ "naming_rule": "By \"Naming Series\" field",
+ "search_fields": "finished_good_item,top_bom,release_status",
+ "show_title_field_in_link": 0,
+ "title_field": "finished_good_item",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1,
+ "field_order": [
+  "details_tab",
+  "naming_series",
+  "company",
+  "finished_good_item",
+  "finished_good_name",
+  "bom_creator",
+  "top_bom",
+  "cb_1",
+  "release_status",
+  "effective_datetime",
+  "customer",
+  "project",
+  "history_section",
+  "supersedes_master",
+  "cb_2",
+  "superseded_by_master",
+  "approval_section",
+  "approved_by",
+  "approved_on",
+  "cb_3",
+  "released_by",
+  "released_on",
+  "notes_section",
+  "notes",
+  "items_tab",
+  "items",
+  "connections_tab"
+ ],
+ "fields": [
+  {
+   "fieldname": "details_tab",
+   "fieldtype": "Tab Break",
+   "label": "Details"
+  },
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Series",
+   "options": "MER-.YYYY.-.####",
+   "default": "MER-.YYYY.-.####",
+   "reqd": 1,
+   "hidden": 1,
+   "no_copy": 1
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1,
+   "in_standard_filter": 1
+  },
+  {
+   "fieldname": "finished_good_item",
+   "fieldtype": "Link",
+   "label": "Finished Good",
+   "options": "Item",
+   "reqd": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1
+  },
+  {
+   "fieldname": "finished_good_name",
+   "fieldtype": "Data",
+   "label": "Item Name",
+   "fetch_from": "finished_good_item.item_name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "bom_creator",
+   "fieldtype": "Link",
+   "label": "BOM Creator",
+   "options": "BOM Creator"
+  },
+  {
+   "fieldname": "top_bom",
+   "fieldtype": "Link",
+   "label": "Top BOM",
+   "options": "BOM",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "cb_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "release_status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Draft\nApproved\nReleased for Production\nSuperseded",
+   "default": "Draft",
+   "read_only": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "no_copy": 1,
+   "allow_on_submit": 0
+  },
+  {
+   "fieldname": "effective_datetime",
+   "fieldtype": "Datetime",
+   "label": "Effective Datetime"
+  },
+  {
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "label": "Customer",
+   "options": "Customer"
+  },
+  {
+   "fieldname": "project",
+   "fieldtype": "Link",
+   "label": "Project",
+   "options": "Project"
+  },
+  {
+   "fieldname": "history_section",
+   "fieldtype": "Section Break",
+   "label": "Supersede",
+   "collapsible": 1
+  },
+  {
+   "fieldname": "supersedes_master",
+   "fieldtype": "Link",
+   "label": "Supersedes",
+   "options": "Master Engineering Release",
+   "read_only": 1,
+   "no_copy": 1
+  },
+  {
+   "fieldname": "cb_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "superseded_by_master",
+   "fieldtype": "Link",
+   "label": "Superseded By",
+   "options": "Master Engineering Release",
+   "read_only": 1,
+   "no_copy": 1
+  },
+  {
+   "fieldname": "approval_section",
+   "fieldtype": "Section Break",
+   "label": "Approval",
+   "collapsible": 1
+  },
+  {
+   "fieldname": "approved_by",
+   "fieldtype": "Link",
+   "label": "Approved By",
+   "options": "User",
+   "read_only": 1,
+   "no_copy": 1
+  },
+  {
+   "fieldname": "approved_on",
+   "fieldtype": "Datetime",
+   "label": "Approved On",
+   "read_only": 1,
+   "no_copy": 1
+  },
+  {
+   "fieldname": "cb_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "released_by",
+   "fieldtype": "Link",
+   "label": "Released By",
+   "options": "User",
+   "read_only": 1,
+   "no_copy": 1
+  },
+  {
+   "fieldname": "released_on",
+   "fieldtype": "Datetime",
+   "label": "Released On",
+   "read_only": 1,
+   "no_copy": 1
+  },
+  {
+   "fieldname": "notes_section",
+   "fieldtype": "Section Break",
+   "label": "Notes"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Text Editor",
+   "label": "Notes"
+  },
+  {
+   "fieldname": "items_tab",
+   "fieldtype": "Tab Break",
+   "label": "Items"
+  },
+  {
+   "fieldname": "items",
+   "fieldtype": "Table",
+   "label": "Items",
+   "options": "Master Engineering Release Item"
+  },
+  {
+   "fieldname": "connections_tab",
+   "fieldtype": "Tab Break",
+   "label": "Connections",
+   "show_dashboard": 1
+  }
+ ],
+ "permissions": [
+  {
+   "role": "System Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "email": 0,
+   "share": 0,
+   "delete": 1,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "Engineering Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "email": 0,
+   "share": 0,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "Engineering Manager Master",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "email": 0,
+   "share": 0,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "Engineering User",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "email": 0,
+   "share": 0,
+   "create": 1,
+   "write": 1
+  },
+  {
+   "role": "Manufacturing Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "email": 0,
+   "share": 0
+  },
+  {
+   "role": "Manufacturing User",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "email": 0,
+   "share": 0
+  },
+  {
+   "role": "Quality Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "email": 0,
+   "share": 0
+  }
+ ]
+}

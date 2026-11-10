@@ -1,0 +1,290 @@
+{
+ "actions": [],
+ "autoname": "format:{component}-5XXXX-{revision_number}",
+ "creation": "2026-11-01 15:30:00.000000",
+ "custom": 0,
+ "doctype": "DocType",
+ "editable_grid": 0,
+ "engine": "InnoDB",
+ "field_order": [
+  "details_tab",
+  "item",
+  "revision_number",
+  "cb_1",
+  "workflow_state",
+  "release_readiness",
+  "baseline_section",
+  "drawing_revision",
+  "material_specification",
+  "bom_revision_reference",
+  "cb_2",
+  "routing_revision_reference",
+  "inspection_plan_revision_reference",
+  "history_section",
+  "interchangeability_decision",
+  "applicable_eco",
+  "cb_3",
+  "previous_revision",
+  "superseding_revision",
+  "amended_from",
+  "connections_tab"
+ ],
+ "fields": [
+  {
+   "fieldname": "details_tab",
+   "fieldtype": "Tab Break",
+   "label": "Details",
+   "idx": 1
+  },
+  {
+   "fieldname": "item",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Item",
+   "options": "Item",
+   "reqd": 1,
+   "search_index": 1,
+   "set_only_once": 1,
+   "idx": 2
+  },
+  {
+   "fieldname": "revision_number",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Revision Number",
+   "set_only_once": 1,
+   "idx": 3,
+   "read_only": 1,
+   "default": "0",
+   "in_standard_filter": 1
+  },
+  {
+   "fieldname": "cb_1",
+   "fieldtype": "Column Break",
+   "idx": 4
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "Draft",
+   "fieldname": "workflow_state",
+   "fieldtype": "Select",
+   "hidden": 0,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "no_copy": 1,
+   "options": "Draft\nUnder Review\nApproved\nRelease Ready\nReleased\nSuperseded\nObsolete\nCancelled",
+   "read_only": 1,
+   "idx": 5
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "Not Ready",
+   "description": "Derived from Status (Release Ready / Released = Ready).",
+   "fieldname": "release_readiness",
+   "fieldtype": "Select",
+   "label": "Release Readiness",
+   "no_copy": 1,
+   "options": "Not Ready\nReady",
+   "read_only": 1,
+   "idx": 6
+  },
+  {
+   "fieldname": "baseline_section",
+   "fieldtype": "Section Break",
+   "label": "Manufacturing Baseline",
+   "idx": 7
+  },
+  {
+   "description": "Must be an Approved Engineering Drawing (the Item's drawing or a revision of it) before submit.",
+   "fieldname": "drawing_revision",
+   "fieldtype": "Link",
+   "label": "Drawing Revision",
+   "options": "Engineering Drawing",
+   "reqd": 1,
+   "idx": 8
+  },
+  {
+   "fieldname": "material_specification",
+   "fieldtype": "Link",
+   "label": "Material Specification",
+   "options": "Material Specification",
+   "idx": 9
+  },
+  {
+   "fieldname": "bom_revision_reference",
+   "fieldtype": "Link",
+   "label": "BOM Revision Reference",
+   "options": "BOM",
+   "idx": 10
+  },
+  {
+   "fieldname": "cb_2",
+   "fieldtype": "Column Break",
+   "idx": 11
+  },
+  {
+   "fieldname": "routing_revision_reference",
+   "fieldtype": "Link",
+   "label": "Routing Revision Reference",
+   "options": "Routing",
+   "idx": 12
+  },
+  {
+   "fieldname": "inspection_plan_revision_reference",
+   "fieldtype": "Link",
+   "label": "Inspection Plan (Quality Inspection Template)",
+   "options": "Quality Inspection Template",
+   "idx": 13
+  },
+  {
+   "fieldname": "history_section",
+   "fieldtype": "Section Break",
+   "label": "Revision History",
+   "idx": 14
+  },
+  {
+   "fieldname": "interchangeability_decision",
+   "fieldtype": "Select",
+   "label": "Interchangeability Decision",
+   "options": "\nInterchangeable\nNot Interchangeable",
+   "reqd": 1,
+   "idx": 15,
+   "default": "Interchangeable"
+  },
+  {
+   "fieldname": "applicable_eco",
+   "fieldtype": "Link",
+   "label": "Applicable ECO",
+   "options": "Engineering Change Order",
+   "idx": 16
+  },
+  {
+   "fieldname": "cb_3",
+   "fieldtype": "Column Break",
+   "idx": 17
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "previous_revision",
+   "fieldtype": "Link",
+   "label": "Previous Revision",
+   "no_copy": 1,
+   "options": "Product Revision",
+   "read_only": 1,
+   "idx": 18
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "superseding_revision",
+   "fieldtype": "Link",
+   "label": "Superseding Revision",
+   "no_copy": 1,
+   "options": "Product Revision",
+   "read_only": 1,
+   "idx": 19
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Product Revision",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1,
+   "idx": 20
+  },
+  {
+   "fieldname": "connections_tab",
+   "fieldtype": "Tab Break",
+   "label": "Connections",
+   "show_dashboard": 1,
+   "idx": 21
+  }
+ ],
+ "is_submittable": 1,
+ "istable": 0,
+ "links": [],
+ "modified": "2026-11-10 13:20:00.000000",
+ "modified_by": "Administrator",
+ "module": "Engineering ITAG KSA",
+ "name": "Product Revision",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 0,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "email": 0,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Engineering Manager",
+   "share": 0,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 0,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Engineering User",
+   "share": 0,
+   "write": 1
+  },
+  {
+   "email": 0,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Manufacturing Manager",
+   "share": 0
+  },
+  {
+   "email": 0,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Manufacturing User",
+   "share": 0
+  },
+  {
+   "email": 0,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Quality Manager",
+   "share": 0
+  }
+ ],
+ "search_fields": "item,revision_number,workflow_state",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

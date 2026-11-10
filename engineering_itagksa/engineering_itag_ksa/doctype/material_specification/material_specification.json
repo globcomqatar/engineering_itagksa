@@ -1,0 +1,310 @@
+{
+ "actions": [],
+ "autoname": "MSBV-.#####.-.revision.",
+ "creation": "2026-11-01 15:30:00.000000",
+ "custom": 0,
+ "doctype": "DocType",
+ "editable_grid": 0,
+ "engine": "InnoDB",
+ "field_order": [
+  "specification_name",
+  "revision",
+  "cb_1",
+  "workflow_state",
+  "description",
+  "requirements_section",
+  "applicable_standards",
+  "material_requirements",
+  "pressure_limit",
+  "temperature_limit",
+  "cb_2",
+  "design_constraints",
+  "testing_requirements",
+  "certification_requirements",
+  "critical_section",
+  "critical_requirements",
+  "review_section",
+  "submitted_for_review_by",
+  "submitted_for_review_on",
+  "cb_review",
+  "approved_by",
+  "approved_on",
+  "history_section",
+  "revises",
+  "superseded_by",
+  "superseded_on"
+ ],
+ "fields": [
+  {
+   "fieldname": "specification_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Material Specification Name",
+   "idx": 1
+  },
+  {
+   "fieldname": "revision",
+   "fieldtype": "Data",
+   "idx": 2,
+   "in_list_view": 1,
+   "label": "Revision",
+   "set_only_once": 1,
+   "default": "0",
+   "read_only": 1,
+   "in_standard_filter": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "cb_1",
+   "fieldtype": "Column Break",
+   "idx": 3
+  },
+  {
+   "default": "Draft",
+   "fieldname": "workflow_state",
+   "fieldtype": "Select",
+   "in_list_view": 0,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "no_copy": 1,
+   "options": "Draft\nUnder Review\nApproved\nSuperseded\nObsolete",
+   "read_only": 1,
+   "idx": 4
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "idx": 5,
+   "label": "Description",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "requirements_section",
+   "fieldtype": "Section Break",
+   "idx": 6,
+   "label": "Requirements"
+  },
+  {
+   "fieldname": "applicable_standards",
+   "fieldtype": "Small Text",
+   "idx": 7,
+   "label": "Applicable Standards"
+  },
+  {
+   "fieldname": "material_requirements",
+   "fieldtype": "Text",
+   "idx": 8,
+   "label": "Material Requirements"
+  },
+  {
+   "fieldname": "pressure_limit",
+   "fieldtype": "Data",
+   "idx": 9,
+   "label": "Pressure Limit"
+  },
+  {
+   "fieldname": "temperature_limit",
+   "fieldtype": "Data",
+   "idx": 10,
+   "label": "Temperature Limit"
+  },
+  {
+   "fieldname": "cb_2",
+   "fieldtype": "Column Break",
+   "idx": 11
+  },
+  {
+   "fieldname": "design_constraints",
+   "fieldtype": "Text",
+   "idx": 12,
+   "label": "Design Constraints"
+  },
+  {
+   "fieldname": "testing_requirements",
+   "fieldtype": "Text",
+   "idx": 13,
+   "label": "Testing Requirements"
+  },
+  {
+   "fieldname": "certification_requirements",
+   "fieldtype": "Text",
+   "idx": 14,
+   "label": "Certification Requirements"
+  },
+  {
+   "fieldname": "critical_section",
+   "fieldtype": "Section Break",
+   "idx": 15,
+   "label": "Critical Requirements"
+  },
+  {
+   "fieldname": "critical_requirements",
+   "fieldtype": "Table",
+   "idx": 16,
+   "label": "Critical Requirements",
+   "options": "Material Specification Critical Requirement"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "review_section",
+   "fieldtype": "Section Break",
+   "label": "Review and Approval",
+   "idx": 17
+  },
+  {
+   "fieldname": "submitted_for_review_by",
+   "fieldtype": "Link",
+   "label": "Submitted for Review By",
+   "options": "User",
+   "read_only": 1,
+   "no_copy": 1,
+   "idx": 18
+  },
+  {
+   "fieldname": "submitted_for_review_on",
+   "fieldtype": "Datetime",
+   "label": "Submitted for Review On",
+   "read_only": 1,
+   "no_copy": 1,
+   "idx": 19
+  },
+  {
+   "fieldname": "cb_review",
+   "fieldtype": "Column Break",
+   "idx": 20
+  },
+  {
+   "fieldname": "approved_by",
+   "fieldtype": "Link",
+   "label": "Approved By",
+   "options": "User",
+   "read_only": 1,
+   "no_copy": 1,
+   "idx": 21
+  },
+  {
+   "fieldname": "approved_on",
+   "fieldtype": "Datetime",
+   "label": "Approved On",
+   "read_only": 1,
+   "no_copy": 1,
+   "idx": 22
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "history_section",
+   "fieldtype": "Section Break",
+   "idx": 23,
+   "label": "Revision History"
+  },
+  {
+   "fieldname": "revises",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Revises",
+   "no_copy": 1,
+   "options": "Material Specification",
+   "read_only": 1,
+   "search_index": 1,
+   "set_only_once": 1,
+   "description": "Set by Create Revision: the Material Specification this revision replaces. When this one is Approved, that one becomes Superseded automatically.",
+   "idx": 24
+  },
+  {
+   "fieldname": "superseded_by",
+   "fieldtype": "Link",
+   "idx": 25,
+   "label": "Superseded By",
+   "no_copy": 1,
+   "options": "Material Specification",
+   "read_only": 1
+  },
+  {
+   "fieldname": "superseded_on",
+   "fieldtype": "Date",
+   "idx": 26,
+   "label": "Superseded On",
+   "no_copy": 1,
+   "read_only": 1
+  }
+ ],
+ "is_submittable": 0,
+ "istable": 0,
+ "links": [],
+ "modified": "2026-11-09 19:30:00.000000",
+ "modified_by": "Administrator",
+ "module": "Engineering ITAG KSA",
+ "name": "Material Specification",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 0,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 0,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Engineering Manager",
+   "share": 0,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 0,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Engineering User",
+   "share": 0,
+   "write": 1
+  },
+  {
+   "email": 0,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Manufacturing Manager",
+   "share": 0
+  },
+  {
+   "email": 0,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Manufacturing User",
+   "share": 0
+  },
+  {
+   "email": 0,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Quality Manager",
+   "share": 0
+  }
+ ],
+ "search_fields": "specification_name,revision,description,workflow_state",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1,
+ "title_field": "specification_name",
+ "show_title_field_in_link": 0
+}

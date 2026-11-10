@@ -1,0 +1,45 @@
+{
+ "actions": [],
+ "creation": "2026-11-01 15:30:00.000000",
+ "custom": 0,
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "material_specification",
+  "spec_revision"
+ ],
+ "fields": [
+  {
+   "fieldname": "material_specification",
+   "fieldtype": "Link",
+   "idx": 1,
+   "in_list_view": 1,
+   "label": "Material Specification",
+   "options": "Material Specification",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "material_specification.revision",
+   "fieldname": "spec_revision",
+   "fieldtype": "Data",
+   "idx": 2,
+   "in_list_view": 1,
+   "label": "Spec Revision",
+   "read_only": 1
+  }
+ ],
+ "is_submittable": 0,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-11-09 09:10:00.000000",
+ "modified_by": "Administrator",
+ "module": "Engineering ITAG KSA",
+ "name": "Engineering Release Specification",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 0
+}

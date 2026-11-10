@@ -1,0 +1,23 @@
+{
+ "color": "#29cd42",
+ "creation": "2026-11-01 17:00:00.000000",
+ "docstatus": 0,
+ "doctype": "Number Card",
+ "document_type": "Item",
+ "dynamic_filters_json": "[]",
+ "filters_json": "[]",
+ "function": "Count",
+ "idx": 0,
+ "is_public": 1,
+ "is_standard": 1,
+ "label": "Items with Drawing",
+ "method": "engineering_itagksa.dashboard_utils.get_items_with_drawing",
+ "modified": "2026-11-01 17:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Engineering ITAG KSA",
+ "name": "Items with Drawing",
+ "owner": "Administrator",
+ "show_percentage_stats": 0,
+ "stats_time_interval": "Monthly",
+ "type": "Custom"
+}

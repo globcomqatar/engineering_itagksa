@@ -1,0 +1,241 @@
+{
+ "actions": [],
+ "autoname": "ECO-.YYYY.-.#####",
+ "creation": "2026-11-01 15:30:00.000000",
+ "custom": 0,
+ "doctype": "DocType",
+ "editable_grid": 0,
+ "engine": "InnoDB",
+ "field_order": [
+  "source_ecr",
+  "item",
+  "company",
+  "cb_1",
+  "workflow_state",
+  "change_risk",
+  "completed_on",
+  "impact_section",
+  "impact_assessment",
+  "changes_section",
+  "controlled_changes",
+  "approval_section",
+  "approval_rule",
+  "approval_requirements",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "source_ecr",
+   "fieldtype": "Link",
+   "idx": 1,
+   "in_list_view": 1,
+   "label": "Source ECR",
+   "options": "Engineering Change Request",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "source_ecr.item",
+   "fieldname": "item",
+   "fieldtype": "Link",
+   "idx": 2,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Item",
+   "options": "Item",
+   "read_only": 1
+  },
+  {
+   "description": "Used by the Approval Matrix resolver.",
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "idx": 3,
+   "label": "Company",
+   "options": "Company"
+  },
+  {
+   "fieldname": "cb_1",
+   "fieldtype": "Column Break",
+   "idx": 4
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "Draft",
+   "description": "Draft / Under Review while editing. Submit sets Approved; after submit it may be set to Completed. Cancel sets Cancelled.",
+   "fieldname": "workflow_state",
+   "fieldtype": "Select",
+   "hidden": 0,
+   "idx": 5,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "no_copy": 1,
+   "options": "Draft\nUnder Review\nApproved\nCompleted\nCancelled",
+   "read_only": 0
+  },
+  {
+   "fieldname": "change_risk",
+   "fieldtype": "Select",
+   "idx": 6,
+   "label": "Change Risk",
+   "options": "\nLow\nMedium\nHigh"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "completed_on",
+   "fieldtype": "Datetime",
+   "idx": 7,
+   "label": "Completed On",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "impact_section",
+   "fieldtype": "Section Break",
+   "idx": 8,
+   "label": "Impact Assessment"
+  },
+  {
+   "fieldname": "impact_assessment",
+   "fieldtype": "Text",
+   "idx": 9,
+   "label": "Impact Assessment"
+  },
+  {
+   "description": "ECO completion never writes to Item, BOM, Routing, Drawing or Material Specification (B7). Carry changes out via new revisions/releases.",
+   "fieldname": "changes_section",
+   "fieldtype": "Section Break",
+   "idx": 10,
+   "label": "Controlled Changes"
+  },
+  {
+   "fieldname": "controlled_changes",
+   "fieldtype": "Table",
+   "idx": 11,
+   "label": "Controlled Changes",
+   "options": "Engineering Change Order Controlled Change",
+   "reqd": 1
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "approval_section",
+   "fieldtype": "Section Break",
+   "idx": 12,
+   "label": "Approval Matrix (resolver)"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "approval_rule",
+   "fieldtype": "Link",
+   "idx": 13,
+   "label": "Matched Approval Rule",
+   "no_copy": 1,
+   "options": "Engineering Approval Matrix",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "approval_requirements",
+   "fieldtype": "Small Text",
+   "idx": 14,
+   "label": "Approval Requirements",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "idx": 15,
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Engineering Change Order",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  }
+ ],
+ "is_submittable": 1,
+ "istable": 0,
+ "links": [],
+ "modified": "2026-11-09 09:10:00.000000",
+ "modified_by": "Administrator",
+ "module": "Engineering ITAG KSA",
+ "name": "Engineering Change Order",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 0,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "email": 0,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Engineering Manager",
+   "share": 0,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 0,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Engineering User",
+   "share": 0,
+   "write": 1
+  },
+  {
+   "email": 0,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Manufacturing Manager",
+   "share": 0
+  },
+  {
+   "email": 0,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Manufacturing User",
+   "share": 0
+  },
+  {
+   "email": 0,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Quality Manager",
+   "share": 0
+  }
+ ],
+ "search_fields": "source_ecr,item,workflow_state",
+ "show_title_field_in_link": 0,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "item",
+ "track_changes": 1
+}

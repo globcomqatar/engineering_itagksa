@@ -1,0 +1,64 @@
+{
+ "actions": [],
+ "creation": "2026-11-01 15:30:00.000000",
+ "custom": 0,
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "recipient",
+  "method",
+  "sent_on",
+  "acknowledged"
+ ],
+ "fields": [
+  {
+   "fieldname": "recipient",
+   "fieldtype": "Link",
+   "idx": 1,
+   "in_list_view": 1,
+   "label": "Recipient",
+   "options": "User",
+   "reqd": 1
+  },
+  {
+   "default": "System Notification",
+   "description": "Email goes only via standard ERPNext Notification / email queue to human users; bots never auto-send from this table (POL-EML).",
+   "fieldname": "method",
+   "fieldtype": "Select",
+   "idx": 2,
+   "in_list_view": 1,
+   "label": "Method",
+   "options": "System Notification\nEmail\nPrint",
+   "reqd": 1
+  },
+  {
+   "fieldname": "sent_on",
+   "fieldtype": "Datetime",
+   "idx": 3,
+   "in_list_view": 1,
+   "label": "Sent On",
+   "read_only": 1
+  },
+  {
+   "fieldname": "acknowledged",
+   "fieldtype": "Check",
+   "idx": 4,
+   "in_list_view": 1,
+   "label": "Acknowledged"
+  }
+ ],
+ "is_submittable": 0,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-11-01 15:30:00.000000",
+ "modified_by": "Administrator",
+ "module": "Engineering ITAG KSA",
+ "name": "Engineering Release Distribution",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 0
+}

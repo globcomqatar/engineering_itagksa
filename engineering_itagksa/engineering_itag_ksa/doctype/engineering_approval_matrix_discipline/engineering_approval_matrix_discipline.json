@@ -1,0 +1,61 @@
+{
+ "actions": [],
+ "creation": "2026-11-01 15:30:00.000000",
+ "custom": 0,
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "sequence",
+  "discipline",
+  "required_role",
+  "is_mandatory"
+ ],
+ "fields": [
+  {
+   "fieldname": "sequence",
+   "fieldtype": "Int",
+   "idx": 1,
+   "in_list_view": 1,
+   "label": "Sequence"
+  },
+  {
+   "fieldname": "discipline",
+   "fieldtype": "Data",
+   "idx": 2,
+   "in_list_view": 1,
+   "label": "Discipline",
+   "reqd": 1
+  },
+  {
+   "fieldname": "required_role",
+   "fieldtype": "Link",
+   "idx": 3,
+   "in_list_view": 1,
+   "label": "Required Role",
+   "options": "Role",
+   "reqd": 1
+  },
+  {
+   "default": "1",
+   "fieldname": "is_mandatory",
+   "fieldtype": "Check",
+   "idx": 4,
+   "in_list_view": 1,
+   "label": "Is Mandatory"
+  }
+ ],
+ "is_submittable": 0,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-11-01 15:30:00.000000",
+ "modified_by": "Administrator",
+ "module": "Engineering ITAG KSA",
+ "name": "Engineering Approval Matrix Discipline",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 0
+}

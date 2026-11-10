@@ -1,0 +1,208 @@
+{
+ "actions": [],
+ "autoname": "EIR-.YYYY.-.#####",
+ "creation": "2026-11-01 15:30:00.000000",
+ "custom": 0,
+ "doctype": "DocType",
+ "editable_grid": 0,
+ "engine": "InnoDB",
+ "field_order": [
+  "details_tab",
+  "item_name",
+  "item_group",
+  "item_component",
+  "stock_uom",
+  "cb_1",
+  "eng_item_category",
+  "eng_item_type",
+  "is_stock_item",
+  "engineering_drawing",
+  "material_specification",
+  "created_item",
+  "attributes_section",
+  "item_request_attribute",
+  "desc_section",
+  "description",
+  "amended_from",
+  "connections_tab"
+ ],
+ "fields": [
+  {
+   "fieldname": "details_tab",
+   "fieldtype": "Tab Break",
+   "label": "Details"
+  },
+  {
+   "fieldname": "item_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Item Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "item_group",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Item Group",
+   "options": "Item Group",
+   "reqd": 1
+  },
+  {
+   "fieldname": "item_component",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Item Component",
+   "options": "Item Component",
+   "description": "Only components of the selected Item Group are offered."
+  },
+  {
+   "fieldname": "stock_uom",
+   "fieldtype": "Link",
+   "label": "Stock UOM",
+   "options": "UOM",
+   "reqd": 1
+  },
+  {
+   "fieldname": "cb_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "eng_item_category",
+   "fieldtype": "Select",
+   "in_standard_filter": 1,
+   "label": "Item Category",
+   "options": "Manufacturing\nRaw Material\nSub-Assembly",
+   "reqd": 1
+  },
+  {
+   "fieldname": "eng_item_type",
+   "fieldtype": "Select",
+   "label": "Item Type",
+   "options": "Critical\nNon-Critical\nNon-Products"
+  },
+  {
+   "default": "1",
+   "fieldname": "is_stock_item",
+   "fieldtype": "Check",
+   "label": "Maintain Stock"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "engineering_drawing",
+   "fieldtype": "Link",
+   "label": "Engineering Drawing",
+   "options": "Engineering Drawing"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "material_specification",
+   "fieldtype": "Link",
+   "label": "Material Specification",
+   "options": "Material Specification"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "created_item",
+   "fieldtype": "Link",
+   "label": "Created Item",
+   "no_copy": 1,
+   "options": "Item",
+   "read_only": 1
+  },
+  {
+   "fieldname": "attributes_section",
+   "fieldtype": "Section Break",
+   "label": "Attributes"
+  },
+  {
+   "fieldname": "item_request_attribute",
+   "fieldtype": "Table",
+   "label": "Item Request Attribute",
+   "options": "Item Request Attribute"
+  },
+  {
+   "fieldname": "desc_section",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Description"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Engineering Item Request",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "connections_tab",
+   "fieldtype": "Tab Break",
+   "label": "Connections",
+   "show_dashboard": 1
+  }
+ ],
+ "is_submittable": 1,
+ "istable": 0,
+ "links": [],
+ "modified": "2026-11-09 18:30:00.000000",
+ "modified_by": "Administrator",
+ "module": "Engineering ITAG KSA",
+ "name": "Engineering Item Request",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 0,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 0,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "email": 0,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Engineering Manager",
+   "share": 0,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 0,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Engineering User",
+   "share": 0,
+   "write": 1
+  }
+ ],
+ "search_fields": "item_name,item_group",
+ "show_title_field_in_link": 0,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "item_name",
+ "track_changes": 1
+}

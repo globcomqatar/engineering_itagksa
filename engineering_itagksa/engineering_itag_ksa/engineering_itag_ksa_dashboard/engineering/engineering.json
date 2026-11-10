@@ -1,0 +1,82 @@
+{
+ "cards": [
+  {
+   "card": "Submitted Item Requests"
+  },
+  {
+   "card": "Released Drawings"
+  },
+  {
+   "card": "Releases for Production"
+  },
+  {
+   "card": "Material Specifications"
+  },
+  {
+   "card": "Product Revisions"
+  },
+  {
+   "card": "Engineering Change Requests"
+  },
+  {
+   "card": "Engineering Change Orders"
+  },
+  {
+   "card": "Active BOMs"
+  }
+ ],
+ "charts": [
+  {
+   "chart": "Engineering Release Status",
+   "width": "Half"
+  },
+  {
+   "chart": "Engineering Drawing Status",
+   "width": "Half"
+  },
+  {
+   "chart": "Engineering Item Request Status",
+   "width": "Half"
+  },
+  {
+   "chart": "Item Drawing Coverage",
+   "width": "Half"
+  },
+  {
+   "chart": "BOM Status Summary",
+   "width": "Half"
+  },
+  {
+   "chart": "Material Specification Status",
+   "width": "Half"
+  },
+  {
+   "chart": "Product Revision Status",
+   "width": "Half"
+  },
+  {
+   "chart": "Engineering Change Request Status",
+   "width": "Half"
+  },
+  {
+   "chart": "Engineering Change Order Status",
+   "width": "Half"
+  },
+  {
+   "chart": "Engineering Item Requests Trend",
+   "width": "Half"
+  }
+ ],
+ "creation": "2026-11-01 17:00:00.000000",
+ "dashboard_name": "Engineering",
+ "docstatus": 0,
+ "doctype": "Dashboard",
+ "idx": 0,
+ "is_default": 0,
+ "is_standard": 1,
+ "modified": "2026-11-01 20:45:00.000000",
+ "modified_by": "Administrator",
+ "module": "Engineering ITAG KSA",
+ "name": "Engineering",
+ "owner": "Administrator"
+}
