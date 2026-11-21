@@ -311,29 +311,32 @@ def run_item_request_refs():
 	}).insert()
 	ir.submit()
 	ok("EIR with Item Component submitted and created Item", bool(ir.created_item))
+	ok("v15.3.7: EIR Item Name = Component Name, Description = full text; Item gets both",
+		ir.item_name == "ZZ Smoke EIR Body" and ir.description == "ZZ Smoke EIR Body, 2in, 600"
+		and frappe.db.get_value("Item", ir.created_item, ["item_name", "description"]) == (ir.item_name, ir.description))
 
 	# Drawings: matching Approved, wrong component, Obsolete, Superseded
 	base = {
 		"doctype": "Engineering Drawing",
-		"drawing_type": "Assembly",
+		"drawing_type": "Manufacturing",
 		"item_component": "993",
 		"item_group": "ZZ Smoke Valves",
 		"external_file_link": "https://dms.example.local/dwg/eir.pdf",
 	}
-	dwg = as_user(EU, lambda: frappe.get_doc(dict(base, drawing_name="EIR GA")).insert())
+	dwg = as_user(EU, lambda: frappe.get_doc(dict(base, description="EIR GA")).insert())
 	approve_dwg(dwg.name)
 	ok("Approved Drawing ready for EIR link", frappe.db.get_value("Engineering Drawing", dwg.name, "workflow_state") == "Approved")
 
-	# Wrong component drawing (992 under ZZ DWG Group) — create component+group if needed for isolation
+	# Wrong component drawing (9992 under ZZ DWG Group) — create component+group if needed for isolation
 	if not frappe.db.exists("Item Group", "ZZ DWG Group"):
 		frappe.get_doc({"doctype": "Item Group", "item_group_name": "ZZ DWG Group", "parent_item_group": "All Item Groups"}).insert()
-	if not frappe.db.exists("Item Component", "992"):
-		frappe.get_doc({"doctype": "Item Component", "part_code_prefix": "992", "component_name": "ZZ Smoke Bonnet", "item_group": "ZZ DWG Group"}).insert()
-	wrong = frappe.get_doc(dict(base, item_component="992", item_group="ZZ DWG Group", drawing_name="Wrong",
+	if not frappe.db.exists("Item Component", "9992"):
+		frappe.get_doc({"doctype": "Item Component", "part_code_prefix": "9992", "component_name": "ZZ Smoke Bonnet", "item_group": "ZZ DWG Group"}).insert()
+	wrong = frappe.get_doc(dict(base, item_component="9992", item_group="ZZ DWG Group", description="Wrong",
 		external_file_link="https://dms.example.local/dwg/wrong.pdf")).insert()
 	approve_dwg(wrong.name)
 
-	obs = frappe.get_doc(dict(base, drawing_name="Obsolete one",
+	obs = frappe.get_doc(dict(base, description="Obsolete one",
 		external_file_link="https://dms.example.local/dwg/obs.pdf")).insert()
 	approve_dwg(obs.name)
 	as_user(EM, lambda: apply_workflow(frappe.get_doc("Engineering Drawing", obs.name), "Mark Obsolete"))
@@ -389,7 +392,7 @@ def run_item_request_refs():
 	d.save()
 
 	# Supersede the linked drawing via a newer Approved revision
-	rev = as_user(EU, lambda: frappe.get_doc(dict(base, drawing_name="EIR GA", revises=dwg.name,
+	rev = as_user(EU, lambda: frappe.get_doc(dict(base, description="EIR GA", revises=dwg.name,
 		external_file_link="https://dms.example.local/dwg/eir-b.pdf")).insert())
 	approve_dwg(rev.name)
 	ok("Linked Drawing became Superseded", frappe.db.get_value("Engineering Drawing", dwg.name, "workflow_state") == "Superseded")
@@ -443,17 +446,17 @@ def run_item_request_refs():
 
 	# make_engineering_drawing prefills + write-back via source_item_request / after_insert
 	mapped = make_engineering_drawing(ir.name)
-	ok("make_engineering_drawing prefills item_group, item_component, drawing_name, source_item_request",
+	ok("make_engineering_drawing prefills item_group, item_component, description, source_item_request",
 		mapped.item_group == "ZZ Smoke Valves" and mapped.item_component == "993"
-		and mapped.drawing_name == "Smoke EIR Valve" and mapped.source_item_request == ir.name
+		and mapped.description == ir.description and mapped.source_item_request == ir.name
 		and not mapped.get("item_code"))
 	frappe.db.set_value("Engineering Item Request", ir.name, "engineering_drawing", None)
 	new_dwg = as_user(EU, lambda: frappe.get_doc({
 		"doctype": "Engineering Drawing",
-		"drawing_name": mapped.drawing_name,
+		"description": mapped.description,
 		"item_group": mapped.item_group,
 		"item_component": mapped.item_component,
-		"drawing_type": "Assembly",
+		"drawing_type": "Manufacturing",
 		"external_file_link": "https://dms.example.local/dwg/eir-wb.pdf",
 		"source_item_request": ir.name,
 	}).insert())
@@ -546,15 +549,15 @@ def run_product_revision_v01():
 		_as(EU, lambda: apply_workflow(frappe.get_doc(dt, name), "Submit for Review"))
 		_as(EM, lambda: apply_workflow(frappe.get_doc(dt, name), "Approve"))
 
-	base = {"doctype": "Engineering Drawing", "drawing_type": "Assembly", "item_component": "993",
+	base = {"doctype": "Engineering Drawing", "drawing_type": "Manufacturing", "item_component": "993",
 		"item_group": "ZZ Smoke Valves"}
-	dwg = _as(EU, lambda: frappe.get_doc(dict(base, drawing_name="PR v01 GA",
+	dwg = _as(EU, lambda: frappe.get_doc(dict(base, description="PR v01 GA",
 		external_file_link="https://dms.example.local/dwg/prv01-a.pdf")).insert())
 	approve("Engineering Drawing", dwg.name)
-	other = _as(EU, lambda: frappe.get_doc(dict(base, drawing_name="PR v01 other",
+	other = _as(EU, lambda: frappe.get_doc(dict(base, description="PR v01 other",
 		external_file_link="https://dms.example.local/dwg/prv01-x.pdf")).insert())
 	approve("Engineering Drawing", other.name)
-	draft_dwg = frappe.get_doc(dict(base, drawing_name="PR v01 draft",
+	draft_dwg = frappe.get_doc(dict(base, description="PR v01 draft",
 		external_file_link="https://dms.example.local/dwg/prv01-d.pdf")).insert()
 	ms = _as(EU, lambda: frappe.get_doc({"doctype": "Material Specification", "description": "ZZ smoke PR v01 spec",
 		"critical_requirements": [{"description": "Leak tight", "acceptance_criteria": "API 598"}]}).insert())
@@ -678,7 +681,7 @@ def run_product_revision_v01():
 		"Approved Drawing" in M.row_missing(frappe._dict(row, drawing=draft_dwg.name)))
 
 	# Revision B of the Item's drawing: same chain accepted; auto-fill moves to the current Approved revision
-	rev = _as(EU, lambda: frappe.get_doc(dict(base, drawing_name="PR v01 GA", revises=dwg.name,
+	rev = _as(EU, lambda: frappe.get_doc(dict(base, description="PR v01 GA", revises=dwg.name,
 		external_file_link="https://dms.example.local/dwg/prv01-b.pdf")).insert())
 	approve("Engineering Drawing", rev.name)
 	PRM.assert_drawing_released(rev.name, item)
@@ -732,9 +735,9 @@ def run_material_spec():
 		and meta.get_field("revision").default == "0" and meta.get_field("revises").hidden and meta.get_field("revises").read_only
 		and meta.get_field("revises").options == dt)
 	w = frappe.get_doc("Workflow", "Engineering ITAG KSA Material Specification")
-	ok("Workflow active on workflow_state, states Draft/Under Review/Approved/Superseded/Obsolete",
+	ok("Workflow active on workflow_state, states Prepared/Reviewed/Approved/Superseded/Obsolete",
 		w.is_active and w.document_type == dt and w.workflow_state_field == "workflow_state"
-		and [x.state for x in w.states] == ["Draft", "Under Review", "Approved", "Superseded", "Obsolete"])
+		and [x.state for x in w.states] == ["Prepared", "Reviewed", "Approved", "Superseded", "Obsolete"])
 	ok("No transition leads to Superseded (system-only)", all(t.next_state != "Superseded" for t in w.transitions))
 	ok("Approved -> Obsolete transition exists", any(t.state == "Approved" and t.next_state == "Obsolete" for t in w.transitions))
 
@@ -744,8 +747,8 @@ def run_material_spec():
 		print(f"NOTE MS-BV- series already at {start}; expecting {n1}-0 / {n2}-0")
 	s1 = _as(EU, lambda: frappe.get_doc({"doctype": dt, "description": "ZZ smoke spec 1", "revision": "7",
 		"critical_requirements": [{"description": "Leak tight", "acceptance_criteria": "API 598"}]}).insert())
-	ok(f"New spec -> {n1}-0 (typed revision ignored), starts Draft", s1.name == f"{n1}-0" and s1.revision == "0"
-		and s1.workflow_state == "Draft")
+	ok(f"New spec -> {n1}-0 (typed revision ignored), starts Prepared", s1.name == f"{n1}-0" and s1.revision == "0"
+		and s1.workflow_state == "Prepared")
 	s2 = frappe.get_doc({"doctype": dt, "description": "ZZ smoke spec 2"}).insert()
 	ok(f"Second new spec -> {n2}-0 (shared counter)", s2.name == f"{n2}-0")
 	if not start:
@@ -758,10 +761,10 @@ def run_material_spec():
 
 	def to_approved_by_save():
 		d = frappe.get_doc(dt, s2.name); d.workflow_state = "Approved"; d.save()
-	raises("Draft cannot be saved straight to Approved (Workflow only)", to_approved_by_save)
-	raises("Create Revision refused on a Draft", lambda: create_revision(s1.name))
+	raises("Prepared cannot be saved straight to Approved (Workflow only)", to_approved_by_save)
+	raises("Create Revision refused on a Prepared", lambda: create_revision(s1.name))
 	wf(s1.name, "Submit for Review", EU)
-	ok("Submit for Review stamps submitter", get(s1.name, "workflow_state") == "Under Review" and get(s1.name, "submitted_for_review_by") == EU)
+	ok("Submit for Review stamps submitter", get(s1.name, "workflow_state") == "Reviewed" and get(s1.name, "submitted_for_review_by") == EU)
 	raises("Submitter cannot approve own review", lambda: wf(s1.name, "Approve", EU))
 	wf(s1.name, "Approve", EM)
 	ok("Approve by a different Engineering Manager -> Approved, stamped", get(s1.name, "workflow_state") == "Approved"
@@ -772,8 +775,8 @@ def run_material_spec():
 	raises("Approved content is locked", edit_locked)
 
 	def back_to_draft():
-		d = frappe.get_doc(dt, s1.name); d.workflow_state = "Draft"; d.save()
-	raises("Approved cannot go back to Draft (forward-only)", back_to_draft)
+		d = frappe.get_doc(dt, s1.name); d.workflow_state = "Prepared"; d.save()
+	raises("Approved cannot go back to Prepared (forward-only)", back_to_draft)
 
 	def to_superseded():
 		d = frappe.get_doc(dt, s1.name); d.workflow_state = "Superseded"; d.save()
@@ -781,9 +784,9 @@ def run_material_spec():
 
 	# Create Revision
 	pre = _as(EU, lambda: create_revision(s1.name))
-	ok("Create Revision prefills content + critical requirements, revises, suggests 1, Draft, no stamps",
+	ok("Create Revision prefills content + critical requirements, revises, suggests 1, Prepared, no stamps",
 		pre.get("revises") == s1.name and pre.get("revision") == "1" and pre.get("description") == "ZZ smoke spec 1"
-		and len(pre.get("critical_requirements") or []) == 1 and pre.get("workflow_state") == "Draft"
+		and len(pre.get("critical_requirements") or []) == 1 and pre.get("workflow_state") == "Prepared"
 		and not pre.get("approved_by") and not pre.get("superseded_by"))
 	r1 = _as(EU, lambda: frappe.get_doc(pre).insert())
 	ok(f"Revision keeps the number -> {n1}-1", r1.name == f"{n1}-1" and r1.revision == "1")
@@ -815,7 +818,7 @@ def run_material_spec():
 	assert_spec_approved(r2.name, "ANY-ITEM")
 	ok("PR/ER spec check: Approved spec accepted (no item, no docstatus)", True)
 	raises("PR/ER spec check: Superseded spec refused", lambda: assert_spec_approved(r1.name, "ANY-ITEM"))
-	raises("PR/ER spec check: Draft spec refused", lambda: assert_spec_approved(s3.name, "ANY-ITEM"))
+	raises("PR/ER spec check: Prepared spec refused", lambda: assert_spec_approved(s3.name, "ANY-ITEM"))
 	wf(r2.name, "Mark Obsolete", EM)
 	ok("Approved -> Obsolete by Engineering Manager (manual)", get(r2.name, "workflow_state") == "Obsolete")
 
@@ -865,21 +868,24 @@ def run_product_revision_v153():
 		pw.document_type == "Product Revision" and pw.is_active == 1
 		and (pw.workflow_state_field, pw.send_email_alert, pw.override_status)
 		== (dw.workflow_state_field, dw.send_email_alert, dw.override_status))
-	tkey = lambda t: (t.state, t.action, t.next_state, t.allowed, t.allow_self_approval, t.condition or "",
+	# v15.3.7: Drawing states are Prepared / Reviewed ("Return to Prepared"); PR keeps Draft / Under Review.
+	_ren = {"Prepared": "Draft", "Reviewed": "Under Review", "Return to Prepared": "Return to Draft"}
+	_r = lambda v: _ren.get(v, v)  # noqa: E731
+	tkey = lambda t: (_r(t.state), _r(t.action), _r(t.next_state), t.allowed, t.allow_self_approval, t.condition or "",
 		t.send_email_to_creator)
 	ok("Every Drawing transition (state, action, next, role, self-approval, condition) is in the PR Workflow",
 		{tkey(t) for t in dw.transitions} <= {tkey(t) for t in pw.transitions})
 	extra_t = {(t.state, t.action, t.next_state, t.allowed) for t in pw.transitions} - {
-		(t.state, t.action, t.next_state, t.allowed) for t in dw.transitions}
+		(_r(t.state), _r(t.action), _r(t.next_state), t.allowed) for t in dw.transitions}
 	ok("PR-only transitions are exactly Mark Release Ready + Mark Obsolete from Release Ready / Released", extra_t == {
 		("Approved", "Mark Release Ready", "Release Ready", "Engineering Manager"),
 		("Release Ready", "Mark Obsolete", "Obsolete", "Engineering Manager"),
 		("Released", "Mark Obsolete", "Obsolete", "Engineering Manager")})
-	skey = lambda s: (s.state, s.allow_edit, s.update_field or "", s.update_value or "", s.is_optional_state,
+	skey = lambda s: (_r(s.state), s.allow_edit, s.update_field or "", s.update_value or "", s.is_optional_state,
 		s.send_email, s.next_action_email_template or "", s.message or "")
 	pstates = {s.state: s for s in pw.states}
 	ok("Every Drawing state is in the PR Workflow with the same edit role / update field / email / optional settings",
-		all(s.state in pstates and skey(pstates[s.state]) == skey(s) for s in dw.states))
+		all(_r(s.state) in pstates and skey(pstates[_r(s.state)]) == skey(s) for s in dw.states))
 	ok("PR doc_status: Draft/Under Review 0, Approved/Superseded/Obsolete/Release Ready/Released 1, Cancelled 2",
 		{s.state: s.doc_status for s in pw.states} == {"Draft": "0", "Under Review": "0", "Approved": "1",
 			"Superseded": "1", "Obsolete": "1", "Release Ready": "1", "Released": "1", "Cancelled": "2"})
@@ -893,9 +899,9 @@ def run_product_revision_v153():
 		idf.default == "Interchangeable" and "Interchangeable" in (idf.options or "").split("\n"))
 
 	# --- setup: Approved drawing + spec, two Items from EIRs, a default BOM for the first
-	base = {"doctype": "Engineering Drawing", "drawing_type": "Assembly", "item_component": "993",
+	base = {"doctype": "Engineering Drawing", "drawing_type": "Manufacturing", "item_component": "993",
 		"item_group": "ZZ Smoke Valves"}
-	dwg = _as(EU, lambda: frappe.get_doc(dict(base, drawing_name="PR v153 GA",
+	dwg = _as(EU, lambda: frappe.get_doc(dict(base, description="PR v153 GA",
 		external_file_link="https://dms.example.local/dwg/prv153-a.pdf")).insert())
 	approve("Engineering Drawing", dwg.name)
 	ms = _as(EU, lambda: frappe.get_doc({"doctype": "Material Specification", "description": "ZZ smoke PR v153 spec",
@@ -1064,8 +1070,8 @@ def _dwg_setup():
 		frappe.get_doc({"doctype": "Item Group", "item_group_name": "All Item Groups", "is_group": 1}).insert()
 	for g in ("ZZ DWG Group", "ZZ DWG Other"):
 		frappe.get_doc({"doctype": "Item Group", "item_group_name": g, "parent_item_group": "All Item Groups"}).insert()
-	frappe.get_doc({"doctype": "Item Component", "part_code_prefix": "991", "component_name": "ZZ Smoke Body", "item_group": "ZZ DWG Group"}).insert()
-	frappe.get_doc({"doctype": "Item Component", "part_code_prefix": "992", "component_name": "ZZ Smoke Bonnet", "item_group": "ZZ DWG Group"}).insert()
+	frappe.get_doc({"doctype": "Item Component", "part_code_prefix": "9991", "component_name": "ZZ Smoke Body", "item_group": "ZZ DWG Group"}).insert()
+	frappe.get_doc({"doctype": "Item Component", "part_code_prefix": "9992", "component_name": "ZZ Smoke Bonnet", "item_group": "ZZ DWG Group"}).insert()
 	for email, roles in DWG_USERS.items():
 		u = frappe.get_doc({"doctype": "User", "email": email, "first_name": email.split("@")[0], "send_welcome_email": 0,
 			"user_type": "System User"}).insert(ignore_permissions=True)
@@ -1104,25 +1110,26 @@ def run_drawing(report=True):
 		_dwg_setup()
 		ok("Drawing has no item_code field", not frappe.get_meta("Engineering Drawing").has_field("item_code"))
 		ok("Drawing is not submittable", not frappe.get_meta("Engineering Drawing").is_submittable)
-		base = {"doctype": "Engineering Drawing", "drawing_type": "Assembly", "item_component": "991",
-			"external_file_link": "https://dms.example.local/dwg/991.pdf"}
+		base = {"doctype": "Engineering Drawing", "drawing_type": "Manufacturing", "item_component": "9991",
+			"external_file_link": "https://dms.example.local/dwg/9991.pdf"}
 
 		# naming series {component}-5NNNN-{revision} (no DWG- prefix); series key remains DWG-{component}-5
-		a = _as(EU, lambda: frappe.get_doc(dict(base, drawing_name="Smoke body GA", revision="q")).insert())
-		ok("New drawing gets Revision 0 automatically (typed Q ignored): 991-50001-0", a.name == "991-50001-0" and a.revision == "0")
+		a = _as(EU, lambda: frappe.get_doc(dict(base, description="Smoke body GA", revision="q")).insert())
+		ok("New drawing gets Revision 0 automatically (typed Q ignored): 9991-50001-0", a.name == "9991-50001-0" and a.revision == "0")
 		ok("Item Group defaulted from Item Component", a.item_group == "ZZ DWG Group")
-		ok("New drawing starts Draft", a.workflow_state == "Draft")
-		other = frappe.get_doc(dict(base, item_component="992", drawing_name="Bonnet", revision="0")).insert()
-		ok("Counter is per component (992 starts at 50001-0)", other.name == "992-50001-0")
-		ok("Invalid typed revision ignored, 0 assigned", frappe.get_doc(dict(base, drawing_name="x", revision="A_1")).insert().revision == "0")
+		ok("New drawing starts Prepared", a.workflow_state == "Prepared")
+		other = frappe.get_doc(dict(base, item_component="9992", description="Bonnet", revision="0")).insert()
+		ok("Counter is per component (9992 starts at 50001-0)", other.name == "9992-50001-0")
+		ok("Invalid typed revision ignored, 0 assigned", frappe.get_doc(dict(base, description="x", revision="A_1")).insert().revision == "0")
 		ok("Revision field is read-only with default 0", frappe.get_meta("Engineering Drawing").get_field("revision").read_only == 1
 			and frappe.get_meta("Engineering Drawing").get_field("revision").default == "0")
 		ok("Revises field is hidden", frappe.get_meta("Engineering Drawing").get_field("revises").hidden == 1)
-		raises("Item Component outside Item Group refused", lambda: frappe.get_doc(dict(base, drawing_name="x", revision="Q",
+		raises("Item Component outside Item Group refused", lambda: frappe.get_doc(dict(base, description="x", revision="Q",
 			item_group="ZZ DWG Other")).insert())
-		raises("Drawing Name required", lambda: frappe.get_doc(dict(base, revision="Q")).insert())
-		raises("Item Component required", lambda: frappe.get_doc(dict(base, drawing_name="x", revision="Q", item_component=None)).insert())
-		raises("New drawing cannot be inserted as Approved", lambda: frappe.get_doc(dict(base, drawing_name="x", revision="Q",
+		raises("Description required", lambda: frappe.get_doc(dict(base, revision="Q")).insert())
+		ok("Drawing has no drawing_name field (v15.3.7)", not frappe.get_meta("Engineering Drawing").has_field("drawing_name"))
+		raises("Item Component required", lambda: frappe.get_doc(dict(base, description="x", revision="Q", item_component=None)).insert())
+		raises("New drawing cannot be inserted as Approved", lambda: frappe.get_doc(dict(base, description="x", revision="Q",
 			workflow_state="Approved")).insert())
 
 		def change_rev():
@@ -1130,7 +1137,7 @@ def run_drawing(report=True):
 		raises("Revision locked after creation (set_only_once)", change_rev)
 
 		def change_comp():
-			d = frappe.get_doc("Engineering Drawing", a.name); d.item_component = "992"; d.save()
+			d = frappe.get_doc("Engineering Drawing", a.name); d.item_component = "9992"; d.save()
 		raises("Item Component locked after creation (set_only_once)", change_comp)
 
 		def hand_superseded():
@@ -1139,15 +1146,17 @@ def run_drawing(report=True):
 
 		# checksum attestation (unchanged behaviour)
 		ok("Typed SHA-256 ignored on link-only drawing",
-			not frappe.get_doc(dict(base, drawing_name="x", revision="X", file_checksum_sha256="abc")).insert().file_checksum_sha256)
-		raises("Secret in URL rejected", lambda: frappe.get_doc(dict(base, drawing_name="x", revision="Y",
+			not frappe.get_doc(dict(base, description="x", revision="X", file_checksum_sha256="abc")).insert().file_checksum_sha256)
+		raises("Secret in URL rejected", lambda: frappe.get_doc(dict(base, description="x", revision="Y",
 			external_file_link="https://x/y.pdf?token=abc")).insert())
-		raises("Neither link nor local file rejected", lambda: frappe.get_doc(dict(base, drawing_name="x", revision="Y",
-			external_file_link="")).insert())
-		raises("Public local drawing file rejected", lambda: frappe.get_doc(dict(base, drawing_name="x", revision="Y",
+		nofile = frappe.get_doc(dict(base, description="x", revision="Y", external_file_link="")).insert()
+		ok("v15.3.7: Prepared drawing without link or file saves and gets its number", nofile.name.startswith("9991-5")
+			and nofile.workflow_state == "Prepared")
+		raises("v15.3.7: Submit for Review without link or file refused", lambda: _as(EU, lambda: _wf(nofile.name, "Submit for Review")))
+		raises("Public local drawing file rejected", lambda: frappe.get_doc(dict(base, description="x", revision="Y",
 			external_file_link="", drawing_file="/files/x.pdf")).insert())
 		fl1, fl2 = _pfile("ZZ-DWG-L.txt", b"L1"), _pfile("ZZ-DWG-L2.txt", b"L2")
-		dwl = frappe.get_doc(dict(base, drawing_name="x", revision="L", external_file_link="", drawing_file=fl1,
+		dwl = frappe.get_doc(dict(base, description="x", revision="L", external_file_link="", drawing_file=fl1,
 			checksum_attested_by="Guest")).insert()
 		ok("Local private file accepted + SHA-256 computed, client attester ignored",
 			dwl.file_checksum_sha256 == hashlib.sha256(b"L1").hexdigest() and not dwl.checksum_attested_by)
@@ -1158,16 +1167,16 @@ def run_drawing(report=True):
 
 		# Workflow path + segregation of duties
 		_as(EU, lambda: _wf(a.name, "Submit for Review"))
-		ok("Draft -> Under Review by Engineering User", get(a.name, "workflow_state") == "Under Review"
+		ok("Prepared -> Reviewed by Engineering User", get(a.name, "workflow_state") == "Reviewed"
 			and get(a.name, "submitted_for_review_by") == EU)
 		raises("Engineering User cannot Approve", lambda: _as(EU, lambda: _wf(a.name, "Approve")))
-		_as(EM, lambda: _wf(a.name, "Return to Draft"))
-		ok("Under Review -> Draft by Engineering Manager (review stamp cleared)", get(a.name, "workflow_state") == "Draft"
+		_as(EM, lambda: _wf(a.name, "Return to Prepared"))
+		ok("Reviewed -> Prepared by Engineering Manager (review stamp cleared)", get(a.name, "workflow_state") == "Prepared"
 			and not get(a.name, "submitted_for_review_by"))
 		_as(EM, lambda: _wf(a.name, "Submit for Review"))
 		raises("Approver must differ from the user who submitted for review", lambda: _as(EM, lambda: _wf(a.name, "Approve")))
 		_as(EM2, lambda: _wf(a.name, "Approve"))
-		ok("Under Review -> Approved by a different Engineering Manager", get(a.name, "workflow_state") == "Approved"
+		ok("Reviewed -> Approved by a different Engineering Manager", get(a.name, "workflow_state") == "Approved"
 			and get(a.name, "approved_by") == EM2 and get(a.name, "approved_on"))
 
 		def edit_locked():
@@ -1175,45 +1184,48 @@ def run_drawing(report=True):
 		raises("Approved drawing content frozen", edit_locked)
 
 		def back_to_draft():
-			d = frappe.get_doc("Engineering Drawing", a.name); d.workflow_state = "Draft"; d.save()
-		raises("Approved cannot go back to Draft (forward-only)", back_to_draft)
+			d = frappe.get_doc("Engineering Drawing", a.name); d.workflow_state = "Prepared"; d.save()
+		raises("Approved cannot go back to Prepared (forward-only)", back_to_draft)
 
 		# Create Revision button (Approved only, prefilled, one open revision per drawing)
 		ok("Next revision letters A->B, Z->AA, AZ->BA, 09->10 (helper still used for letter mapping)",
 			[next_revision_letter(x) for x in ("A", "Z", "AZ", "09", "B.1")] == ["B", "AA", "BA", "10", ""])
-		raises("Create Revision refused on a Draft drawing", lambda: create_revision(other.name))
+		raises("Create Revision refused on a Prepared drawing", lambda: create_revision(other.name))
 		cr = _as(EU, lambda: create_revision(a.name))
-		ok("Create Revision prefills name/group/component/type/revises, suggests 1, file+checksum empty",
-			cr["drawing_name"] == a.drawing_name and cr["item_group"] == a.item_group and cr["item_component"] == "991"
-			and cr["drawing_type"] == "Assembly" and cr["revises"] == a.name and cr["revision"] == "1"
+		ok("Create Revision prefills description/group/component/type/revises, suggests 1, file+checksum empty",
+			cr["description"] == a.description and cr["item_group"] == a.item_group and cr["item_component"] == "9991"
+			and cr["drawing_type"] == "Manufacturing" and cr["revises"] == a.name and cr["revision"] == "1"
 			and not cr.get("drawing_file") and not cr.get("external_file_link") and not cr.get("file_checksum_sha256")
-			and cr["workflow_state"] == "Draft")
-		raises("Create Revision draft without a file cannot be saved",
-			lambda: _as(EU, lambda: frappe.get_doc(dict(create_revision(a.name))).insert()))
+			and cr["workflow_state"] == "Prepared")
+		cr_nofile = _as(EU, lambda: frappe.get_doc(dict(create_revision(a.name))).insert())
+		ok("v15.3.7: Create Revision draft saves without a file (Prepared)", cr_nofile.workflow_state == "Prepared")
+		_as(EU, lambda: frappe.delete_doc("Engineering Drawing", cr_nofile.name))
+		ok("v15.3.7: Engineering User deletes a Prepared drawing never sent for review",
+			not frappe.db.exists("Engineering Drawing", cr_nofile.name))
 		cr_doc = _as(EU, lambda: frappe.get_doc(dict(create_revision(a.name),
-			external_file_link="https://dms.example.local/dwg/991-b.pdf")).insert())
+			external_file_link="https://dms.example.local/dwg/9991-b.pdf")).insert())
 		ok("Create Revision draft saves once a file is attached", cr_doc.revises == a.name and cr_doc.revision == "1")
 		raises("Second Create Revision blocked while one is open", lambda: _as(EU, lambda: create_revision(a.name)))
 		raises("Second manual revision of the same drawing blocked while one is open", lambda: frappe.get_doc(dict(base,
-			drawing_name="x", revision="Q", revises=a.name)).insert())
+			description="x", revision="Q", revises=a.name)).insert())
 		frappe.delete_doc("Engineering Drawing", cr_doc.name, force=1)
 
 		# new revision = new document, same number base, revises -> Superseded on Approve (series unchanged)
-		series_before = int(frappe.db.get_value("Series", "DWG-991-5", "current", order_by="name") or 0)
-		b = _as(EU, lambda: frappe.get_doc(dict(base, drawing_name="Smoke body GA", revision="Z", revises=a.name)).insert())
+		series_before = int(frappe.db.get_value("Series", "DWG-9991-5", "current", order_by="name") or 0)
+		b = _as(EU, lambda: frappe.get_doc(dict(base, description="Smoke body GA", revision="Z", revises=a.name)).insert())
 		ok("Revision 1 keeps the same drawing number base ({0}-1); series unchanged".format(a.name.rsplit("-", 1)[0]),
 			b.name == a.name.rsplit("-", 1)[0] + "-1"
-			and int(frappe.db.get_value("Series", "DWG-991-5", "current", order_by="name") or 0) == series_before)
-		raises("Revises must keep the same Item Component", lambda: frappe.get_doc(dict(base, item_component="992",
-			drawing_name="x", revision="C", revises=a.name)).insert())
+			and int(frappe.db.get_value("Series", "DWG-9991-5", "current", order_by="name") or 0) == series_before)
+		raises("Revises must keep the same Item Component", lambda: frappe.get_doc(dict(base, item_component="9992",
+			description="x", revision="C", revises=a.name)).insert())
 		ok("Revision of 0 is assigned 1 automatically (typed Z ignored)", b.revision == "1")
 		_as(EU, lambda: _wf(b.name, "Submit for Review"))
-		ok("A still Approved while B is Under Review", get(a.name, "workflow_state") == "Approved")
+		ok("A still Approved while B is Reviewed", get(a.name, "workflow_state") == "Approved")
 		_as(EM, lambda: _wf(b.name, "Approve"))
 		ok("B Approved", get(b.name, "workflow_state") == "Approved")
 		ok("A Superseded by B automatically (same transaction)", get(a.name, "workflow_state") == "Superseded"
 			and get(a.name, "superseded_by") == b.name and str(get(a.name, "superseded_date")) == nowdate())
-		c = frappe.get_doc(dict(base, drawing_name="Smoke body GA", revision="C", revises=a.name)).insert()
+		c = frappe.get_doc(dict(base, description="Smoke body GA", revision="C", revises=a.name)).insert()
 		_as(EU, lambda: _wf(c.name, "Submit for Review"))
 		raises("Cannot approve a revision of an already Superseded drawing", lambda: _as(EM, lambda: _wf(c.name, "Approve")))
 		raises("Create Revision refused on a Superseded drawing", lambda: create_revision(a.name))
@@ -1229,11 +1241,11 @@ def run_drawing(report=True):
 		raises("Product Revision mapping from Drawing refused until PR redesign", lambda: make_product_revision(b.name))
 
 		# 9,999 drawings per component (50001..59999)
-		frappe.db.sql("update `tabSeries` set `current` = 9998 where `name` = %s", "DWG-992-5")
-		last = frappe.get_doc(dict(base, item_component="992", drawing_name="last", revision="A")).insert()
-		ok("Number 59999 is the last one", last.name == "992-59999-0")
-		raises("10,000th drawing of a component refused", lambda: frappe.get_doc(dict(base, item_component="992",
-			drawing_name="over", revision="B")).insert())
+		frappe.db.sql("update `tabSeries` set `current` = 9998 where `name` = %s", "DWG-9992-5")
+		last = frappe.get_doc(dict(base, item_component="9992", description="last", revision="A")).insert()
+		ok("Number 59999 is the last one", last.name == "9992-59999-0")
+		raises("10,000th drawing of a component refused", lambda: frappe.get_doc(dict(base, item_component="9992",
+			description="over", revision="B")).insert())
 	finally:
 		frappe.db.rollback()
 		frappe.set_user("Administrator")
@@ -1242,6 +1254,6 @@ def run_drawing(report=True):
 		for path in _FILES:
 			if os.path.exists(path):
 				os.remove(path)
-	print("ROLLBACK residue drawings (991/992):", frappe.db.count("Engineering Drawing", {"item_component": ["in", ["991", "992"]]}))
+	print("ROLLBACK residue drawings (9991/9992):", frappe.db.count("Engineering Drawing", {"item_component": ["in", ["9991", "9992"]]}))
 	if report:
 		return _report()

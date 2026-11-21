@@ -21,13 +21,14 @@ from frappe.utils import add_to_date, now_datetime, nowdate
 
 from engineering_itagksa.constants import (
 	APPROVED,
-	DRAFT,
+	PREPARED,
 	RELEASE_READY,
 	RELEASED,
 	RELEASED_FOR_PRODUCTION,
 	ROLE_ENG_MANAGER,
 	ROLE_ENG_MANAGER_MASTER,
 	ROLE_ENG_USER,
+	REVIEWED,
 	UNDER_REVIEW,
 )
 from engineering_itagksa.setup.seed_demo import FG_ITEM, ITEM_GROUP, _company
@@ -114,7 +115,7 @@ def ensure_spec():
 	"""v15.3.0: no Item Code; MSBV-NNNNN-0. Reused by its seed description (prefers the Approved one); Submit for
 	Review (demo engineer) -> Approve (Administrator, a different user)."""
 	name = (frappe.db.get_value("Material Specification", {"description": MS_DESC, "workflow_state": APPROVED}, "name")
-		or frappe.db.get_value("Material Specification", {"description": MS_DESC, "workflow_state": ["in", [DRAFT, UNDER_REVIEW]]}, "name"))
+		or frappe.db.get_value("Material Specification", {"description": MS_DESC, "workflow_state": ["in", [PREPARED, REVIEWED]]}, "name"))
 	if not name:
 		name = frappe.get_doc({
 			"doctype": "Material Specification", "description": MS_DESC,
@@ -123,16 +124,16 @@ def ensure_spec():
 			"pressure_limit": "CL300 (51.1 bar @ 38C)", "temperature_limit": "-29C to 425C",
 			"testing_requirements": "Shell and seat test per API 598",
 		}).insert().name
-	if _state("Material Specification", name) == DRAFT:
+	if _state("Material Specification", name) == PREPARED:
 		_ms_action(name, "Submit for Review", ensure_demo_submitter())
-	if _state("Material Specification", name) == UNDER_REVIEW:
+	if _state("Material Specification", name) == REVIEWED:
 		_ms_action(name, "Approve")
 	return name
 
 
 DEMO_COMPONENT = "500"
 DEMO_COMPONENT_NAME = "Demo Valve Body"
-DRAWING_NAME = "Demo Gate Valve 4in CL300 - General Arrangement"
+DRAWING_DESCRIPTION = "Demo Gate Valve 4in CL300 - manufacturing drawing"
 DEMO_SUBMITTER = "demo.eng.user@itagksa.localhost"
 
 
@@ -168,23 +169,23 @@ def _drawing_action(name, action, user=None):
 
 def ensure_drawing():
 	"""v15.3.0: no Item Code on the drawing; 500-5NNNN-0 (Revision is system-assigned), Submit for Review (demo engineer) -> Approve
-	(Administrator, a different user). Reused by component + drawing name."""
+	(Administrator, a different user). Reused by component + description."""
 	comp = ensure_demo_component()
 	name = frappe.db.get_value("Engineering Drawing",
-		{"item_component": comp, "drawing_name": DRAWING_NAME}, "name", order_by="creation desc")
+		{"item_component": comp, "description": DRAWING_DESCRIPTION}, "name", order_by="creation desc")
 	if not name:
 		name = frappe.get_doc({
-			"doctype": "Engineering Drawing", "drawing_name": DRAWING_NAME, "item_component": comp,
-			"item_group": ITEM_GROUP, "drawing_type": "General Arrangement",
+			"doctype": "Engineering Drawing", "description": DRAWING_DESCRIPTION, "item_component": comp,
+			"item_group": ITEM_GROUP, "drawing_type": "Manufacturing",
 			"security_classification": "Internal", "applicable_standard": "ASME Y14.5",
 			# link-only drawing: since v0.1.9 the SHA-256 is computed only from an attached local file, so a typed
 			# hash is ignored and the demo drawing is not checksum-attested.
 			"external_file_link": DRAWING_URL,
 			"revision_date": nowdate(), "effective_date": nowdate(), "change_description": "Initial release (demo)",
 		}).insert().name
-	if _state("Engineering Drawing", name) in (None, "", "Draft"):
+	if _state("Engineering Drawing", name) in (None, "", PREPARED):
 		_drawing_action(name, "Submit for Review", ensure_demo_submitter())
-	if _state("Engineering Drawing", name) == UNDER_REVIEW:
+	if _state("Engineering Drawing", name) == REVIEWED:
 		_drawing_action(name, "Approve")
 	return name
 
@@ -299,10 +300,10 @@ def negative_checks(company=None):
 		wo.insert(); wo.submit()
 	attempt("wo_submit_without_release", wo_without_release)
 
-	# 2. A draft Drawing cannot be saved straight to Approved: only the Workflow (Under Review -> Approve) gets there
+	# 2. A Prepared Drawing cannot be saved straight to Approved: only the Workflow (Reviewed -> Approve) gets there
 	def drawing_draft_approved():
-		d = frappe.get_doc({"doctype": "Engineering Drawing", "drawing_name": "Negative check", "item_component": ensure_demo_component(),
-			"revision": "Z9", "drawing_type": "Detail", "security_classification": "Internal", "external_file_link": DRAWING_URL})
+		d = frappe.get_doc({"doctype": "Engineering Drawing", "description": "Negative check", "item_component": ensure_demo_component(),
+			"revision": "Z9", "drawing_type": "Manufacturing", "security_classification": "Internal", "external_file_link": DRAWING_URL})
 		d.insert()
 		d.workflow_state = APPROVED
 		d.save()
@@ -317,7 +318,7 @@ def verify(company=None):
 	out = {
 		"material_specification": frappe.get_all("Material Specification", filters={"description": MS_DESC}, fields=["name", "revision", "workflow_state", "superseded_by"]),
 		"engineering_drawing": frappe.get_all("Engineering Drawing", filters={"item_component": DEMO_COMPONENT},
-			fields=["name", "drawing_name", "revision", "revises", "workflow_state", "superseded_by", "checksum_attested", "checksum_attested_by", "checksum_attested_on"]),
+			fields=["name", "description", "revision", "revises", "workflow_state", "superseded_by", "checksum_attested", "checksum_attested_by", "checksum_attested_on"]),
 		"product_revision": frappe.get_all("Product Revision", filters={"item": FG_ITEM},
 			fields=["name", "workflow_state", "docstatus", "release_readiness", "bom_revision_reference"]),
 		"engineering_release": frappe.get_all("Engineering Release", filters={"item": FG_ITEM},

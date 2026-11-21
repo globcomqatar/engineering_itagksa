@@ -7,7 +7,9 @@
  "engine": "InnoDB",
  "field_order": [
   "item_attribute",
-  "attribute_value"
+  "attribute_value",
+  "mandatory",
+  "from_component"
  ],
  "fields": [
   {
@@ -20,10 +22,26 @@
   },
   {
    "fieldname": "attribute_value",
-   "fieldtype": "Data",
+   "fieldtype": "Autocomplete",
    "in_list_view": 1,
-   "label": "Attribute Value",
-   "reqd": 1
+   "label": "Attribute Value"
+  },
+  {
+   "fieldname": "mandatory",
+   "fieldtype": "Check",
+   "label": "Mandatory",
+   "default": "0",
+   "read_only": 1,
+   "in_list_view": 1,
+   "columns": 1
+  },
+  {
+   "fieldname": "from_component",
+   "fieldtype": "Check",
+   "label": "From Component",
+   "default": "0",
+   "read_only": 1,
+   "hidden": 1
   }
  ],
  "index_web_pages_for_search": 0,
@@ -31,7 +49,7 @@
  "issingle": 0,
  "istable": 1,
  "links": [],
- "modified": "2026-11-05 11:45:00.000000",
+ "modified": "2026-11-21 13:30:00.000000",
  "modified_by": "Administrator",
  "module": "Engineering ITAG KSA",
  "name": "Item Request Attribute",

@@ -11,7 +11,7 @@ Re-running is safe (existing Product Revisions reused, only advanced).
 
 import frappe
 
-from engineering_itagksa.constants import APPROVED, RELEASE_READY, RELEASED, UNDER_REVIEW
+from engineering_itagksa.constants import APPROVED, PREPARED, RELEASE_READY, RELEASED, REVIEWED, UNDER_REVIEW
 from engineering_itagksa.engineering_itag_ksa.doctype.master_engineering_release import (
 	master_engineering_release as M,
 )
@@ -24,16 +24,16 @@ def ensure_spec(item):
 	"""v15.3.0: Material Specification has no Item Code; one per demo item, found by its seed description."""
 	desc = f"{item} material specification (Master demo seed)."
 	name = frappe.db.get_value("Material Specification", {"description": desc, "workflow_state": APPROVED}, "name") or \
-		frappe.db.get_value("Material Specification", {"description": desc, "workflow_state": ["in", ["Draft", UNDER_REVIEW]]}, "name")
+		frappe.db.get_value("Material Specification", {"description": desc, "workflow_state": ["in", [PREPARED, REVIEWED]]}, "name")
 	if not name:
 		name = frappe.get_doc({
 			"doctype": "Material Specification", "description": desc,
 			"applicable_standards": "ISO 9001", "material_requirements": "Per drawing",
 			"testing_requirements": "Visual and dimensional inspection",
 		}).insert().name
-	if _state("Material Specification", name) == "Draft":
+	if _state("Material Specification", name) == PREPARED:
 		_ms_action(name, "Submit for Review", ensure_demo_submitter())
-	if _state("Material Specification", name) == UNDER_REVIEW:
+	if _state("Material Specification", name) == REVIEWED:
 		_ms_action(name, "Approve")
 	return name
 

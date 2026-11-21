@@ -20,6 +20,10 @@ RELEASED = "Released"
 RELEASE_READY = "Release Ready"
 RELEASED_FOR_PRODUCTION = "Released for Production"
 COMPLETED = "Completed"
+# v15.3.7 (Phase 1): Engineering Drawing and Material Specification use Prepared / Reviewed instead of
+# Draft / Under Review. Product Revision, Engineering Release, ECR and ECO keep DRAFT / UNDER_REVIEW.
+PREPARED = "Prepared"
+REVIEWED = "Reviewed"
 
 ROLE_ENG_USER = "Engineering User"
 ROLE_ENG_MANAGER = "Engineering Manager"

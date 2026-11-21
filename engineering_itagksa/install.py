@@ -50,24 +50,32 @@ RELEASE_TRANSITIONS = [
 DRAWING_WORKFLOW_NAME = "Engineering ITAG KSA Engineering Drawing"
 DRAWING_WORKFLOW_DOCTYPE = "Engineering Drawing"
 DRAWING_WORKFLOW_FIELD = "workflow_state"
+# v15.3.7 (Phase 1): Draft -> Prepared, Under Review -> Reviewed (Drawing and Material Specification only;
+# Product Revision keeps Draft / Under Review, see PR_STATES / PR_TRANSITIONS).
 DRAWING_STATES = [
 	# (state, doc_status, allow_edit, style)
-	(C.DRAFT, 0, EU, ""),
-	(C.UNDER_REVIEW, 0, EM, "Warning"),
+	(C.PREPARED, 0, EU, ""),
+	(C.REVIEWED, 0, EM, "Warning"),
 	(C.APPROVED, 0, SM, "Success"),  # content frozen (controller LOCKED_NEXT)
 	(C.SUPERSEDED, 0, SM, "Inverse"),
 	(C.OBSOLETE, 0, SM, "Inverse"),
 ]
 # (state, action, next_state, allowed roles, allow_self_approval)
-DRAWING_TRANSITIONS = [
-	(C.DRAFT, "Submit for Review", C.UNDER_REVIEW, (EU, EM), 1),
-	(C.UNDER_REVIEW, "Return to Draft", C.DRAFT, (EM,), 1),
-	# allow_self_approval 0 (owner may not approve); the controller also requires an approver different from the
-	# user who submitted for review (submitted_for_review_by).
-	(C.UNDER_REVIEW, "Approve", C.APPROVED, (EM,), 0),
-	(C.APPROVED, "Mark Obsolete", C.OBSOLETE, (EM,), 1),
-	(C.SUPERSEDED, "Mark Obsolete", C.OBSOLETE, (EM,), 1),
-]
+def _review_transitions(draft, review, back_action):
+	return [
+		(draft, "Submit for Review", review, (EU, EM), 1),
+		(review, back_action, draft, (EM,), 1),
+		# allow_self_approval 0 (owner may not approve); the controller also requires an approver different from the
+		# user who submitted for review (submitted_for_review_by).
+		(review, "Approve", C.APPROVED, (EM,), 0),
+		(C.APPROVED, "Mark Obsolete", C.OBSOLETE, (EM,), 1),
+		(C.SUPERSEDED, "Mark Obsolete", C.OBSOLETE, (EM,), 1),
+	]
+
+
+DRAWING_TRANSITIONS = _review_transitions(C.PREPARED, C.REVIEWED, "Return to Prepared")
+# Product Revision keeps the pre-v15.3.7 Draft / Under Review names and the "Return to Draft" action.
+_PR_BASE_TRANSITIONS = _review_transitions(C.DRAFT, C.UNDER_REVIEW, "Return to Draft")
 
 
 # v15.3.0 Material Specification Workflow, mirrors the Drawing one (not submittable -> every state docstatus 0).
@@ -107,7 +115,7 @@ PR_STATES = [
 	(C.RELEASED, 1, SM, "Primary"),  # adaptation 3 (system-only)
 	(C.CANCELLED, 2, SM, "Danger"),  # adaptation 5 (standard Cancel)
 ]
-PR_TRANSITIONS = DRAWING_TRANSITIONS + [
+PR_TRANSITIONS = _PR_BASE_TRANSITIONS + [
 	(C.APPROVED, "Mark Release Ready", C.RELEASE_READY, (EM,), 1),  # adaptation 2
 	(C.RELEASE_READY, "Mark Obsolete", C.OBSOLETE, (EM,), 1),  # adaptation 4
 	(C.RELEASED, "Mark Obsolete", C.OBSOLETE, (EM,), 1),  # adaptation 4
@@ -321,6 +329,7 @@ def _ensure_engineering_workspace_shortcuts():
 
 def setup():
 	ensure_roles()
+	ensure_drawing_types()
 	ensure_release_workflow()
 	ensure_drawing_workflow()
 	ensure_material_specification_workflow()
@@ -329,6 +338,31 @@ def setup():
 	ensure_master_release_notifications()
 	ensure_custom_subcontracted_job()
 	frappe.clear_cache()
+
+
+# v15.3.7: Engineering Drawing Type master, maintained by Engineering Managers. Seeded once per value; a type
+# Engineering renames, disables or deletes on Desk is not brought back unless its exact name is missing.
+DEFAULT_DRAWING_TYPES = ("Manufacturing", "Pre-Machining", "Cladding", "Coating", "Welding", "Forging")
+
+
+def ensure_drawing_types():
+	if not frappe.db.exists("DocType", "Engineering Drawing Type"):
+		return
+	for name in DEFAULT_DRAWING_TYPES:
+		if not frappe.db.exists("Engineering Drawing Type", name):
+			frappe.get_doc({"doctype": "Engineering Drawing Type", "drawing_type_name": name, "enabled": 1}).insert(
+				ignore_permissions=True
+			)
+	# Pre-v15.3.7 Select values (Assembly, Detail, Schematic, General Arrangement) still used by a drawing are
+	# created disabled, so existing links stay valid but the value is not offered for new drawings.
+	used = frappe.db.sql_list(
+		"select distinct drawing_type from `tabEngineering Drawing` where ifnull(drawing_type, '') != ''"
+	)
+	for name in used:
+		if not frappe.db.exists("Engineering Drawing Type", name):
+			frappe.get_doc({"doctype": "Engineering Drawing Type", "drawing_type_name": name, "enabled": 0}).insert(
+				ignore_permissions=True
+			)
 
 
 def ensure_roles():
