@@ -3,6 +3,7 @@
  "autoname": ".item_component.-5.####.-.revision.",
  "creation": "2026-11-01 15:30:00.000000",
  "custom": 0,
+ "default_print_format": "Engineering Drawing Sheet",
  "doctype": "DocType",
  "editable_grid": 0,
  "engine": "InnoDB",
@@ -27,6 +28,8 @@
   "checksum_attested",
   "checksum_attested_by",
   "checksum_attested_on",
+  "markups_section",
+  "markups",
   "dates_section",
   "revision_date",
   "effective_date",
@@ -191,6 +194,19 @@
    "read_only": 1
   },
   {
+   "collapsible": 1,
+   "collapsible_depends_on": "markups",
+   "fieldname": "markups_section",
+   "fieldtype": "Section Break",
+   "label": "Mark-ups"
+  },
+  {
+   "fieldname": "markups",
+   "fieldtype": "Table",
+   "label": "Mark-ups",
+   "options": "Engineering Drawing Markup"
+  },
+  {
    "fieldname": "dates_section",
    "fieldtype": "Section Break",
    "label": "Revision Dates"
@@ -305,7 +321,7 @@
  "is_submittable": 0,
  "istable": 0,
  "links": [],
- "modified": "2026-11-21 13:30:00.000000",
+ "modified": "2026-11-21 15:00:00.000000",
  "modified_by": "Administrator",
  "module": "Engineering ITAG KSA",
  "name": "Engineering Drawing",

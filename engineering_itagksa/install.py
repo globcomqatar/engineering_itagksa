@@ -122,6 +122,14 @@ PR_TRANSITIONS = _PR_BASE_TRANSITIONS + [
 ]
 
 
+# v15.3.8 bulk Item Request upload: the approved roles may open Data Import (the import itself is limited to
+# Engineering Item Request by its import permission and by item_request_import.py).
+DATA_IMPORT_ROLE_PERMS = {
+	EU: ("read", "write", "create"),
+	EM: ("read", "write", "create"),
+}
+
+
 # Master Engineering Release Workflow (created once; editable on Desk). Not submittable -> all docstatus 0.
 MASTER_WORKFLOW_NAME = "Engineering ITAG KSA Master Engineering Release"
 MASTER_WORKFLOW_DOCTYPE = "Master Engineering Release"
@@ -337,6 +345,7 @@ def setup():
 	ensure_master_release_workflow()
 	ensure_master_release_notifications()
 	ensure_custom_subcontracted_job()
+	ensure_role_perms("Data Import", DATA_IMPORT_ROLE_PERMS)
 	frappe.clear_cache()
 
 
@@ -391,6 +400,28 @@ def ensure_material_specification_workflow():
 def ensure_product_revision_workflow():
 	"""v15.3.3: Create / update the Product Revision Workflow (copy of the Drawing one). Idempotent."""
 	_ensure_coded_workflow(PR_WORKFLOW_NAME, PR_WORKFLOW_DOCTYPE, PR_WORKFLOW_FIELD, PR_STATES, PR_TRANSITIONS)
+
+
+def ensure_role_perms(doctype, role_perms):
+	"""v15.3.8: add a role permission rule (level 0) when the role has none on ``doctype``. Uses the standard Role
+	Permission API (the first rule copies the standard rules into Custom DocPerm, as Role Permission Manager does)."""
+	from frappe.permissions import add_permission, update_permission_property
+
+	if not frappe.db.exists("DocType", doctype):
+		return
+	for role, ptypes in role_perms.items():
+		if not frappe.db.exists("Role", role):
+			continue
+		if frappe.db.exists("Custom DocPerm", {"parent": doctype, "role": role, "permlevel": 0, "if_owner": 0}):
+			continue
+		if not frappe.db.exists("Custom DocPerm", {"parent": doctype}) and frappe.db.exists(
+			"DocPerm", {"parent": doctype, "role": role, "permlevel": 0, "if_owner": 0}
+		):
+			continue
+		add_permission(doctype, role, 0)
+		for ptype in ptypes:
+			update_permission_property(doctype, role, 0, ptype, 1, validate=False)
+	frappe.clear_cache(doctype=doctype)
 
 
 def _ensure_coded_workflow(name, doctype, field, states, transitions):

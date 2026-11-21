@@ -50,7 +50,7 @@ LOCKED_NEXT = {
 	OBSOLETE: (OBSOLETE,),
 }
 # descriptive content copied by Create Revision
-COPY_FIELDS = ("specification_name", "description", "applicable_standards", "material_requirements", "pressure_limit", "temperature_limit",
+COPY_FIELDS = ("specification_name", "category", "description", "applicable_standards", "material_requirements", "pressure_limit", "temperature_limit",
 	"design_constraints", "testing_requirements", "certification_requirements")
 MUTABLE_WHEN_LOCKED = {FIELD, "superseded_by", "superseded_on", "modified", "modified_by"}
 
