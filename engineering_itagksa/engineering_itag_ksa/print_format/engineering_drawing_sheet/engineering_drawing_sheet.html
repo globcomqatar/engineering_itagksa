@@ -1,0 +1,70 @@
+{#- v15.3.8 Engineering Drawing print: watermark follows the Status; Approved prints without a watermark. -#}
+{%- set watermarks = {"Prepared": "PREPARED", "Reviewed": "REVIEWED", "Superseded": "SUPERSEDED", "Obsolete": "OBSOLETE"} -%}
+{%- set watermark = watermarks.get(doc.workflow_state or "", "") -%}
+<style>
+	.eds { position: relative; font-size: 12px; }
+	.eds-watermark {
+		position: fixed; top: 40%; left: 0; right: 0; z-index: 0; text-align: center;
+		font-size: 96px; font-weight: 700; letter-spacing: 8px; color: rgba(150, 150, 150, 0.25);
+		-webkit-transform: rotate(-30deg); transform: rotate(-30deg); pointer-events: none;
+	}
+	.eds-body { position: relative; z-index: 1; }
+	.eds h2 { margin: 0 0 4px; }
+	.eds table.eds-fields { width: 100%; border-collapse: collapse; margin-top: 12px; }
+	.eds table.eds-fields td { border: 1px solid #d1d8dd; padding: 5px 8px; vertical-align: top; }
+	.eds table.eds-fields td.eds-label { width: 22%; color: #6c7680; }
+	.eds-footer { margin-top: 24px; text-align: center; font-weight: 600; color: #6c7680; }
+</style>
+<div class="eds">
+	{%- if watermark %}<div class="eds-watermark" data-watermark="{{ watermark }}">{{ watermark }}</div>{% endif %}
+	<div class="eds-body">
+		<h2>{{ doc.name }}</h2>
+		<div>{{ (doc.description or "") | e }}</div>
+		<table class="eds-fields">
+			<tr>
+				<td class="eds-label">{{ _("Item Component") }}</td><td>{{ doc.item_component or "" }}</td>
+				<td class="eds-label">{{ _("Item Group") }}</td><td>{{ doc.item_group or "" }}</td>
+			</tr>
+			<tr>
+				<td class="eds-label">{{ _("Drawing Type") }}</td><td>{{ doc.drawing_type or "" }}</td>
+				<td class="eds-label">{{ _("Revision") }}</td><td>{{ doc.revision or "" }}</td>
+			</tr>
+			<tr>
+				<td class="eds-label">{{ _("Status") }}</td><td>{{ _(doc.workflow_state or "") }}</td>
+				<td class="eds-label">{{ _("Security Classification") }}</td><td>{{ _(doc.security_classification or "") }}</td>
+			</tr>
+			<tr>
+				<td class="eds-label">{{ _("Applicable Standard") }}</td><td>{{ (doc.applicable_standard or "") | e }}</td>
+				<td class="eds-label">{{ _("Revises") }}</td><td>{{ doc.revises or "" }}</td>
+			</tr>
+			<tr>
+				<td class="eds-label">{{ _("Revision Date") }}</td><td>{{ doc.get_formatted("revision_date") if doc.revision_date else "" }}</td>
+				<td class="eds-label">{{ _("Effective Date") }}</td><td>{{ doc.get_formatted("effective_date") if doc.effective_date else "" }}</td>
+			</tr>
+			<tr>
+				<td class="eds-label">{{ _("Drawing File") }}</td>
+				<td colspan="3">{{ ((doc.drawing_file or "").split("/")[-1] or doc.external_file_link or "") | e }}</td>
+			</tr>
+			<tr>
+				<td class="eds-label">{{ _("File Checksum (SHA-256)") }}</td><td colspan="3">{{ doc.file_checksum_sha256 or "" }}</td>
+			</tr>
+			<tr>
+				<td class="eds-label">{{ _("Submitted for Review By") }}</td>
+				<td>{{ doc.submitted_for_review_by or "" }} {{ doc.get_formatted("submitted_for_review_on") if doc.submitted_for_review_on else "" }}</td>
+				<td class="eds-label">{{ _("Approved By") }}</td>
+				<td>{{ doc.approved_by or "" }} {{ doc.get_formatted("approved_on") if doc.approved_on else "" }}</td>
+			</tr>
+			{%- if doc.superseded_by %}
+			<tr>
+				<td class="eds-label">{{ _("Superseded By") }}</td>
+				<td>{{ doc.superseded_by }}</td>
+				<td class="eds-label">{{ _("Superseded Date") }}</td><td>{{ doc.get_formatted("superseded_date") if doc.superseded_date else "" }}</td>
+			</tr>
+			{%- endif %}
+			{%- if doc.change_description %}
+			<tr><td class="eds-label">{{ _("Change Description") }}</td><td colspan="3">{{ doc.change_description | e }}</td></tr>
+			{%- endif %}
+		</table>
+		<div class="eds-footer">{{ _("Uncontrolled when printed") }}</div>
+	</div>
+</div>

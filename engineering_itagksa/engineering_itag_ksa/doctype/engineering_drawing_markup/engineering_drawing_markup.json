@@ -1,0 +1,59 @@
+{
+ "actions": [],
+ "creation": "2026-11-21 15:00:00.000000",
+ "custom": 0,
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "markup_file",
+  "note",
+  "added_by",
+  "added_on"
+ ],
+ "fields": [
+  {
+   "fieldname": "markup_file",
+   "fieldtype": "Attach",
+   "in_list_view": 1,
+   "label": "File",
+   "reqd": 1
+  },
+  {
+   "fieldname": "note",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Note"
+  },
+  {
+   "fieldname": "added_by",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Added By",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "added_on",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Added On",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 0,
+ "is_submittable": 0,
+ "issingle": 0,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-11-21 15:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Engineering ITAG KSA",
+ "name": "Engineering Drawing Markup",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 0
+}
