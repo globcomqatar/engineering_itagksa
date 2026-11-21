@@ -1,5 +1,23 @@
 # Changelog
 
+## 15.3.8 (2026-11-21) - Phase 2 (plan v0.2, Owner decisions)
+
+- **BOM**: no change. The BOM workflow in plan v0.2 was dropped from 15.3.8 by Owner decision 21-Nov-2026 (it would
+  affect the Manufacturing team's BOMs); BOM keeps standard ERPNext behaviour.
+- **Material Specification Category**: plain Select field (options empty; ITAG fills them in Customize Form). Not
+  part of the number; copied by Create Revision.
+- **Engineering Drawing Sheet** print format (standard, default for Engineering Drawing): watermark PREPARED /
+  REVIEWED / SUPERSEDED / OBSOLETE by Status, none when Approved; footer "Uncontrolled when printed".
+- **Mark-ups** on Engineering Drawing: child DocType Engineering Drawing Markup (File, Note, Added By, Added On).
+  Private files only; Added By / Added On stamped by the server on new rows and kept on existing rows; the controlled
+  Drawing File and its checksum are not touched; frozen with the drawing once Approved.
+- **Bulk Item Request upload**: Engineering Item Request allows Data Import (import permission for System Manager,
+  Engineering Manager, Engineering User; Data Import access for the two Engineering roles). `item_request_import.py`
+  limits the import to those roles, refuses Submit After Import and any submitted row; managers submit from the list.
+- **Drawing Types**: all types kept; a disabled type is not offered or accepted for a new pick even when the component
+  lists it (existing drawings keep it).
+- ECR / ECO unchanged. No patches.
+
 ## 15.3.7 (2026-11-21) - Phase 1 (ITAG KSA Engineering feedback)
 
 - **Drawing Type master**: new DocType Engineering Drawing Type (Engineering Manager maintains; seeded Manufacturing,

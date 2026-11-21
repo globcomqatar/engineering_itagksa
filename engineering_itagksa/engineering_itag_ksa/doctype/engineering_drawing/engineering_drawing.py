@@ -120,6 +120,7 @@ class EngineeringDrawing(Document):
 		self.validate_single_open_revision()
 		self.validate_external_link()
 		self.validate_drawing_file()
+		self.validate_markups()
 		self.validate_file_reference_present(new)
 		self.set_checksum_from_file()
 		self.validate_checksum_format()
@@ -144,9 +145,8 @@ class EngineeringDrawing(Document):
 			if df.fieldname in MUTABLE_WHEN_LOCKED or df.fieldtype in ("Section Break", "Column Break", "Tab Break"):
 				continue
 			if df.fieldtype == "Table":
-				a = [r.as_dict(no_default_fields=True) for r in before.get(df.fieldname)]
-				b = [r.as_dict(no_default_fields=True) for r in self.get(df.fieldname)]
-				if json.dumps(a, default=str, sort_keys=True) != json.dumps(b, default=str, sort_keys=True):
+				# v15.3.8: compare row names and data fields only (form values arrive as strings, "" for empty)
+				if _table_rows(before, df) != _table_rows(self, df):
 					frappe.throw(_("{0} is locked once a drawing is {1}.").format(df.label, old_state))
 			elif (before.get(df.fieldname) or None) != (self.get(df.fieldname) or None):
 				frappe.throw(_("{0} is locked once a drawing is {1}.").format(df.label, old_state))
@@ -191,14 +191,15 @@ class EngineeringDrawing(Document):
 		from engineering_itagksa.engineering_itag_ksa.doctype.item_component.item_component import get_allowed_drawing_types
 
 		allowed = get_allowed_drawing_types(self.item_component)
-		if allowed:
-			if self.drawing_type not in allowed:
-				frappe.throw(
-					_("Drawing Type {0} is not allowed for Item Component {1}. Allowed: {2}.").format(
-						frappe.bold(self.drawing_type), frappe.bold(self.item_component), ", ".join(allowed)
-					)
+		if allowed and self.drawing_type not in allowed:
+			frappe.throw(
+				_("Drawing Type {0} is not allowed for Item Component {1}. Allowed: {2}.").format(
+					frappe.bold(self.drawing_type), frappe.bold(self.item_component), ", ".join(allowed)
 				)
-		elif not frappe.db.get_value("Engineering Drawing Type", self.drawing_type, "enabled"):
+			)
+		# v15.3.8: a disabled type is kept (existing drawings keep it) but cannot be picked, also when the component
+		# lists it as allowed
+		if not frappe.db.get_value("Engineering Drawing Type", self.drawing_type, "enabled"):
 			frappe.throw(_("Drawing Type {0} is disabled.").format(frappe.bold(self.drawing_type)))
 
 	def on_trash(self):
@@ -315,6 +316,26 @@ class EngineeringDrawing(Document):
 				title=_("Private attachment required"),
 			)
 
+	def validate_markups(self):
+		"""v15.3.8 Mark-ups: private files only; Added By / Added On are stamped by the server on new rows and kept
+		as they were on existing rows. Mark-ups never change the controlled Drawing File or its checksum, and they
+		are frozen with the drawing once it is Approved (enforce_lock)."""
+		before = self.get_doc_before_save() if not self.is_new() else None
+		old_rows = {r.name: r for r in (before.get("markups") if before else [])}
+		for row in self.get("markups") or []:
+			url = (row.markup_file or "").strip()
+			row.markup_file = url or None
+			if url and not url.startswith("/private/files/"):
+				frappe.throw(
+					_("Mark-up file in row {0} must be uploaded as a private file (tick 'Is Private' when attaching).").format(row.idx),
+					title=_("Private attachment required"),
+				)
+			prev = old_rows.get(row.name)
+			if prev:
+				row.added_by, row.added_on = prev.added_by, prev.added_on
+			else:
+				row.added_by, row.added_on = frappe.session.user, now_datetime()
+
 	def validate_file_reference_present(self, new_state):
 		"""Owner rule (v0.1.3): at least one of external_file_link OR drawing_file is required.
 		v15.3.7: only from Reviewed on; a Prepared drawing may be saved without a file to get its number."""
@@ -373,6 +394,15 @@ class EngineeringDrawing(Document):
 		else:
 			self.checksum_attested_by = frappe.session.user
 			self.checksum_attested_on = now_datetime()
+
+
+def _table_rows(doc, df):
+	"""Rows of a Table field as comparable tuples: (row name, data field values), empty values as None."""
+	fields = [f.fieldname for f in frappe.get_meta(df.options).fields if f.fieldtype not in ("Section Break", "Column Break", "Tab Break")]
+	return json.dumps(
+		[[r.name] + [None if r.get(f) in (None, "") else str(r.get(f)) for f in fields] for r in doc.get(df.fieldname) or []],
+		sort_keys=True,
+	)
 
 
 def sha256_of_file_url(file_url):

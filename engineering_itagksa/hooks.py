@@ -324,7 +324,16 @@ doc_events = {
 	},
 	# Item Engineering tab -> Related Documents (BOM / Design / Release) stay current.
 	"Engineering Drawing": {e: "engineering_itagksa.item_links.on_source_change" for e in _ITEM_LINK_EVENTS},
-	"Engineering Item Request": {e: "engineering_itagksa.item_links.on_source_change" for e in _ITEM_LINK_EVENTS},
+	"Engineering Item Request": {
+		**{e: "engineering_itagksa.item_links.on_source_change" for e in _ITEM_LINK_EVENTS},
+		# v15.3.8 bulk upload via Data Import: drafts only
+		"before_insert": "engineering_itagksa.item_request_import.before_insert",
+		"before_submit": "engineering_itagksa.item_request_import.block_status_change_on_import",
+		"before_cancel": "engineering_itagksa.item_request_import.block_status_change_on_import",
+	},
+	"Data Import": {
+		"validate": "engineering_itagksa.item_request_import.validate_data_import",
+	},
 	"Engineering Release": {
 		"before_validate": "engineering_itagksa.eng_settings.apply_default_company",
 		**{e: "engineering_itagksa.item_links.on_source_change" for e in _ITEM_LINK_EVENTS},

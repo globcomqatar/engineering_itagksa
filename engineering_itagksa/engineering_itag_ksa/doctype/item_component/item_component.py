@@ -58,6 +58,14 @@ def get_allowed_drawing_types(component):
 	)
 
 
+def enabled_drawing_types(names):
+	"""v15.3.8: ``names`` limited to enabled Engineering Drawing Types, order kept."""
+	if not names:
+		return []
+	enabled = set(frappe.get_all("Engineering Drawing Type", filters={"name": ["in", names], "enabled": 1}, pluck="name"))
+	return [n for n in names if n in enabled]
+
+
 def get_component_attribute_rows(component):
 	"""v15.3.7: [{attribute, mandatory}] of the component, in row order."""
 	if not component:
@@ -85,6 +93,8 @@ def drawing_type_query(doctype, txt, searchfield, start, page_len, filters):
 	component = (filters or {}).get("item_component")
 	allowed = get_allowed_drawing_types(component)
 	if allowed:
+		# v15.3.8: a disabled type stays on the component but is not offered until it is enabled again
+		allowed = enabled_drawing_types(allowed)
 		rows = [n for n in allowed if (txt or "").lower() in n.lower()]
 		return [[n] for n in rows[cint(start) : cint(start) + cint(page_len)]]
 	return frappe.get_all(

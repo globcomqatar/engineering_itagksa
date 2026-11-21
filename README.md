@@ -16,7 +16,7 @@ bench --site <site> migrate
 bench build --app engineering_itagksa
 ```
 
-`after_install` / `after_migrate` create the roles, the five coded Workflows, the Master Engineering Release
+`after_install` / `after_migrate` create the roles, the six coded Workflows, the Master Engineering Release
 Notifications and the Work Order `custom_subcontracted_job` field. The Custom Fields on Item, Item Group, BOM and
 Work Order ship as the `fixtures/custom_field.json` fixture (module Engineering ITAG KSA). Master data (Item
 Components, value lists, Approval Matrix rules, Engineering Settings) is entered or imported on the new site.
@@ -59,6 +59,14 @@ Roles (`Engineering User`, `Engineering Manager`, `Engineering Manager Master`) 
 
 * **Engineering ITAG KSA Master Engineering Release**: Draft → Approved (Engineering Manager, not the creator) → Released for
   Production (Engineering Manager Master, not the approver). Superseded is set by the system.
+
+v15.3.8 adds: Material Specification **Category** (Select, options filled by ITAG in Customize Form, not part of
+the number); the **Engineering Drawing Sheet** print format (default; watermark by Status, "Uncontrolled when
+printed"); **Mark-ups** on Engineering Drawing (child Engineering Drawing Markup: private file + note, Added By / On
+stamped by the server, frozen once Approved); **Data Import** of Engineering Item Requests for Engineering User /
+Manager / System Manager, drafts only (`item_request_import.py`); disabled Drawing Types are never offered or
+accepted for a new pick. The BOM keeps standard ERPNext behaviour (no Workflow; the BOM
+workflow was dropped from 15.3.8 by Owner decision 21-Nov-2026).
 
 Superseded on Engineering Release is set when a newer release goes Released for Production. ECR and ECO keep the
 standard Save / Submit / Cancel buttons.
