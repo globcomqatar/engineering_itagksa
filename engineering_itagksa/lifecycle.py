@@ -50,16 +50,17 @@ def set_cancelled(doc, field="workflow_state"):
 REVISION_RE = re.compile(r"^[A-Z0-9][A-Z0-9.]{0,9}$")
 
 
-def get_transition(doc, field="workflow_state"):
-	"""Return (old_state, new_state) for this save. New docs start from Draft."""
+def get_transition(doc, field="workflow_state", initial=DRAFT):
+	"""Return (old_state, new_state) for this save. New docs start from ``initial`` (Draft; Prepared for
+	Engineering Drawing / Material Specification since v15.3.7)."""
 	before = doc.get_doc_before_save() if not doc.is_new() else None
 	old = before.get(field) if before else None
-	new = doc.get(field) or DRAFT
-	return (old or DRAFT), new
+	new = doc.get(field) or initial
+	return (old or initial), new
 
 
-def entering(doc, state, field="workflow_state"):
-	old, new = get_transition(doc, field)
+def entering(doc, state, field="workflow_state", initial=DRAFT):
+	old, new = get_transition(doc, field, initial)
 	return new == state and old != state
 
 

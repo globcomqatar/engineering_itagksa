@@ -89,13 +89,17 @@ class TestProductRevisionRevise(unittest.TestCase):
 class TestProductRevisionWorkflowDefinition(unittest.TestCase):
 	def test_copy_of_drawing_plus_adaptations(self):
 		self.assertEqual(I.PR_WORKFLOW_FIELD, I.DRAWING_WORKFLOW_FIELD)
-		self.assertEqual(I.PR_TRANSITIONS[: len(I.DRAWING_TRANSITIONS)], I.DRAWING_TRANSITIONS)
+		# v15.3.7: Drawing renamed its states to Prepared / Reviewed; Product Revision keeps Draft / Under Review and
+		# "Return to Draft", otherwise the same transitions (same roles and self-approval flags).
+		rename = {"Prepared": "Draft", "Reviewed": "Under Review", "Return to Prepared": "Return to Draft"}
+		as_pr = [tuple(rename.get(x, x) if isinstance(x, str) else x for x in t) for t in I.DRAWING_TRANSITIONS]
+		self.assertEqual(I.PR_TRANSITIONS[: len(I.DRAWING_TRANSITIONS)], as_pr)
 		self.assertEqual([t[:3] for t in I.PR_TRANSITIONS[len(I.DRAWING_TRANSITIONS):]], [
 			("Approved", "Mark Release Ready", "Release Ready"),
 			("Release Ready", "Mark Obsolete", "Obsolete"),
 			("Released", "Mark Obsolete", "Obsolete"),
 		])
-		dw = {s[0]: (s[2], s[3]) for s in I.DRAWING_STATES}
+		dw = {rename.get(s[0], s[0]): (s[2], s[3]) for s in I.DRAWING_STATES}
 		pr = {s[0]: (s[2], s[3]) for s in I.PR_STATES}
 		for state, edit_style in dw.items():
 			self.assertEqual(pr[state], edit_style)  # same allow_edit role and style

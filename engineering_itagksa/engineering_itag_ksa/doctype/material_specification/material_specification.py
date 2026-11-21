@@ -5,14 +5,15 @@
 
 * No Item Code. Not submittable. Status (``workflow_state``) is driven by the standard Desk Workflow
   "Engineering ITAG KSA Material Specification" (install.py MS_STATES / MS_TRANSITIONS):
-  Draft -> Under Review -> Approved -> Obsolete;  Under Review -> Draft;  Superseded -> Obsolete.
+  Prepared -> Reviewed -> Approved -> Obsolete;  Reviewed -> Prepared;  Superseded -> Obsolete.
+  (v15.3.7: renamed from Draft / Under Review.)
   Superseded is system-only. Once Approved the status only moves forward and the content is frozen.
 * Name MSBV-NNNNN-<revision> (v15.3.5: the hyphen between MS and BV is dropped). A new specification takes the
   next number of the existing ``MS-BV-`` series (the Series key is unchanged so numbers already issued are not
   reused) with revision 0: MSBV-00001-0, MSBV-00002-0. Create Revision keeps the source's number and adds 1:
   MSBV-00001-1, MSBV-00001-2. Unlike Drawing, a revision does NOT take a new number.
 * Revision is set by the system (read-only, fixed at creation). Revises (hidden, read-only) links a revision to its
-  source. One open (Draft / Under Review) revision per chain.
+  source. One open (Prepared / Reviewed) revision per chain.
 * One Approved specification per revision chain (same MSBV number, plus the Revises source): approving
   MSBV-00001-1 supersedes MSBV-00001-0 (or an existing MS-BV-00001-0, which keeps its name) in the same DB
   transaction. A revision of an existing MS-BV-00001-0 is named MSBV-00001-1 (same number, new prefix, next digit).
@@ -30,7 +31,7 @@ from frappe.model.naming import make_autoname
 from frappe.utils import cint, now_datetime
 
 from engineering_itagksa import lifecycle as L
-from engineering_itagksa.constants import APPROVED, DRAFT, OBSOLETE, SUPERSEDED, UNDER_REVIEW
+from engineering_itagksa.constants import APPROVED, OBSOLETE, PREPARED, REVIEWED, SUPERSEDED
 
 DOCTYPE = "Material Specification"
 FIELD = "workflow_state"
@@ -41,7 +42,7 @@ SERIES_KEY = "MS-BV-"
 SERIES_MAX = 99999
 OLD_NAME_RE = re.compile(r"^(MS-BV-\d{5})-(\d+)$")
 NEW_NAME_RE = re.compile(r"^(MSBV-\d{5})-(\d+)$")
-OPEN_STATES = (DRAFT, UNDER_REVIEW)
+OPEN_STATES = (PREPARED, REVIEWED)
 LOCKED_STATES = (APPROVED, SUPERSEDED, OBSOLETE)
 LOCKED_NEXT = {
 	APPROVED: (APPROVED, SUPERSEDED, OBSOLETE),
@@ -110,7 +111,7 @@ def next_revision(source_name):
 
 
 def open_revision_of(source_name, exclude=None):
-	"""A Draft / Under Review specification that already revises ``source_name`` or sits in its chain."""
+	"""A Prepared / Reviewed specification that already revises ``source_name`` or sits in its chain."""
 	names = chain_names(source_name) - {source_name}
 	filters = {FIELD: ["in", list(OPEN_STATES)]}
 	if exclude:
@@ -144,10 +145,10 @@ class MaterialSpecification(Document):
 			self.assign_revision()
 		L.normalize_revision(self, "revision")
 		if not self.get(FIELD):
-			self.set(FIELD, DRAFT)
-		old, new = L.get_transition(self, FIELD)
-		if self.is_new() and new != DRAFT:
-			frappe.throw(_("A new Material Specification starts as {0}.").format(DRAFT))
+			self.set(FIELD, PREPARED)
+		old, new = L.get_transition(self, FIELD, PREPARED)
+		if self.is_new() and new != PREPARED:
+			frappe.throw(_("A new Material Specification starts as {0}.").format(PREPARED))
 		if new == SUPERSEDED and old != SUPERSEDED:
 			frappe.throw(_("Superseded is set automatically when a newer revision of this specification is Approved."))
 		self.enforce_lock(old)
@@ -206,9 +207,9 @@ class MaterialSpecification(Document):
 		if new == old:
 			return
 		user = frappe.session.user
-		if new == UNDER_REVIEW:
+		if new == REVIEWED:
 			self.submitted_for_review_by, self.submitted_for_review_on = user, now_datetime()
-		elif new == DRAFT:
+		elif new == PREPARED:
 			self.submitted_for_review_by = self.submitted_for_review_on = None
 			self.approved_by = self.approved_on = None
 		elif new == APPROVED:
@@ -257,5 +258,5 @@ def create_revision(source_name):
 			if k not in ("doctype",)})
 	new.revises = src.name
 	new.revision = next_revision(src.name)[1]  # shown on the draft; re-assigned by the server on save
-	new.set(FIELD, DRAFT)
+	new.set(FIELD, PREPARED)
 	return new.as_dict()

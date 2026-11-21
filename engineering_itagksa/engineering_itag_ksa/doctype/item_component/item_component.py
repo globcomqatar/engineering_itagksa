@@ -16,6 +16,16 @@ class ItemComponent(Document):
 		dup = frappe.db.get_value("Item Component", {"part_code_prefix": self.part_code_prefix, "name": ("!=", self.name)})
 		if dup:
 			frappe.throw(_("Part Code Prefix {0} is already used by {1}.").format(frappe.bold(self.part_code_prefix), dup))
+		self.validate_unique_rows("attributes", "attribute")
+		self.validate_unique_rows("allowed_drawing_types", "drawing_type")
+
+	def validate_unique_rows(self, table, field):
+		"""v15.3.7: an attribute / drawing type may be listed only once per component."""
+		seen = set()
+		for row in self.get(table) or []:
+			if row.get(field) in seen:
+				frappe.throw(_("Row {0}: {1} is listed more than once.").format(row.idx, frappe.bold(row.get(field))))
+			seen.add(row.get(field))
 
 	def on_update(self):
 		ensure_item_naming_rule(self)
@@ -34,6 +44,58 @@ class ItemComponent(Document):
 		)
 		self.part_code_prefix = new
 		ensure_item_naming_rule(self)
+
+
+def get_allowed_drawing_types(component):
+	"""v15.3.7: drawing types set on the component (in row order); empty list = no restriction."""
+	if not component:
+		return []
+	return frappe.get_all(
+		"Item Component Drawing Type",
+		filters={"parent": component, "parenttype": "Item Component", "parentfield": "allowed_drawing_types"},
+		pluck="drawing_type",
+		order_by="idx asc",
+	)
+
+
+def get_component_attribute_rows(component):
+	"""v15.3.7: [{attribute, mandatory}] of the component, in row order."""
+	if not component:
+		return []
+	return frappe.get_all(
+		"Item Component Attribute",
+		filters={"parent": component, "parenttype": "Item Component", "parentfield": "attributes"},
+		fields=["attribute", "mandatory"],
+		order_by="idx asc",
+	)
+
+
+@frappe.whitelist()
+def get_component_attributes(component):
+	"""Used by the Item Request form to fill its Attributes table when a component is picked."""
+	frappe.has_permission("Item Component", "read", doc=component, throw=True)
+	return get_component_attribute_rows(component)
+
+
+@frappe.whitelist()
+@frappe.validate_and_sanitize_search_inputs
+def drawing_type_query(doctype, txt, searchfield, start, page_len, filters):
+	"""Drawing Type dropdown on Engineering Drawing: the component's allowed types if any are set,
+	else every enabled type."""
+	component = (filters or {}).get("item_component")
+	allowed = get_allowed_drawing_types(component)
+	if allowed:
+		rows = [n for n in allowed if (txt or "").lower() in n.lower()]
+		return [[n] for n in rows[cint(start) : cint(start) + cint(page_len)]]
+	return frappe.get_all(
+		"Engineering Drawing Type",
+		filters={"enabled": 1, "name": ["like", f"%{txt or ''}%"]},
+		fields=["name"],
+		as_list=True,
+		order_by="creation asc",
+		start=start,
+		page_length=page_len,
+	)
 
 
 ITEM_NAMING_FIELD = "eng_item_component"

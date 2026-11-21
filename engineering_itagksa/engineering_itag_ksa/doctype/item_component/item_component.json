@@ -9,7 +9,11 @@
  "field_order": [
   "part_code_prefix",
   "component_name",
-  "item_group"
+  "item_group",
+  "attributes_section",
+  "attributes",
+  "drawing_types_section",
+  "allowed_drawing_types"
  ],
  "fields": [
   {
@@ -35,8 +39,29 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Item Group",
-   "options": "Item Group",
-   "reqd": 1
+   "options": "Item Group"
+  },
+  {
+   "fieldname": "attributes_section",
+   "fieldtype": "Section Break",
+   "label": "Attributes"
+  },
+  {
+   "fieldname": "attributes",
+   "fieldtype": "Table",
+   "label": "Attributes",
+   "options": "Item Component Attribute"
+  },
+  {
+   "fieldname": "drawing_types_section",
+   "fieldtype": "Section Break",
+   "label": "Drawing Types"
+  },
+  {
+   "fieldname": "allowed_drawing_types",
+   "fieldtype": "Table",
+   "label": "Allowed Drawing Types",
+   "options": "Item Component Drawing Type"
   }
  ],
  "index_web_pages_for_search": 0,
@@ -44,7 +69,7 @@
  "issingle": 0,
  "istable": 0,
  "links": [],
- "modified": "2026-11-02 12:00:00.000000",
+ "modified": "2026-11-21 13:30:00.000000",
  "modified_by": "Administrator",
  "module": "Engineering ITAG KSA",
  "name": "Item Component",

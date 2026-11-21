@@ -22,6 +22,7 @@
   "attributes_section",
   "item_request_attribute",
   "desc_section",
+  "special_details",
   "description",
   "amended_from",
   "connections_tab"
@@ -37,7 +38,7 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Item Name",
-   "reqd": 1
+   "read_only": 1
   },
   {
    "fieldname": "item_group",
@@ -118,7 +119,7 @@
   {
    "fieldname": "item_request_attribute",
    "fieldtype": "Table",
-   "label": "Item Request Attribute",
+   "label": "Attributes",
    "options": "Item Request Attribute"
   },
   {
@@ -126,9 +127,15 @@
    "fieldtype": "Section Break"
   },
   {
+   "fieldname": "special_details",
+   "fieldtype": "Small Text",
+   "label": "Special Details"
+  },
+  {
    "fieldname": "description",
    "fieldtype": "Small Text",
-   "label": "Description"
+   "label": "Description",
+   "read_only": 1
   },
   {
    "fieldname": "amended_from",
@@ -150,7 +157,7 @@
  "is_submittable": 1,
  "istable": 0,
  "links": [],
- "modified": "2026-11-09 18:30:00.000000",
+ "modified": "2026-11-21 13:30:00.000000",
  "modified_by": "Administrator",
  "module": "Engineering ITAG KSA",
  "name": "Engineering Item Request",

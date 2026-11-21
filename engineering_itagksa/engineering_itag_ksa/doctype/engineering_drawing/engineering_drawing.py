@@ -11,12 +11,16 @@ from frappe.model.document import Document
 from frappe.utils import now_datetime
 
 from engineering_itagksa import lifecycle as L
-from engineering_itagksa.constants import APPROVED, DRAFT, OBSOLETE, SUPERSEDED, UNDER_REVIEW
+from engineering_itagksa.constants import APPROVED, OBSOLETE, PREPARED, REVIEWED, SUPERSEDED
 
 # v15.3.0 (Owner decisions 2026-11-09): Engineering Drawing is NOT submittable. Its Status (``workflow_state``) is
 # driven by the standard Desk Workflow "Engineering ITAG KSA Engineering Drawing" (install.py DRAWING_STATES /
 # DRAWING_TRANSITIONS), modelled on Engineering Release:
-#   Draft -> Under Review -> Approved -> Obsolete;  Under Review -> Draft;  Superseded -> Obsolete.
+#   Prepared -> Reviewed -> Approved -> Obsolete;  Reviewed -> Prepared;  Superseded -> Obsolete.
+# v15.3.7 (Phase 1): states renamed Draft -> Prepared, Under Review -> Reviewed. A drawing number is issued on the
+# first save (component + type + description); the file or link is required only from Reviewed on. A Prepared
+# drawing that was never sent for review may be deleted (its number stays used). Drawing Type is a Link to the
+# Engineering Drawing Type master, limited to the component's Allowed Drawing Types when any are set.
 # Superseded is system-only: when a drawing with ``revises`` is Approved, the revised drawing becomes Superseded
 # (superseded_by / superseded_date) in the same DB transaction. Once Approved the status only moves forward and
 # the drawing content is frozen (Engineering Release LOCKED_NEXT pattern).
@@ -28,6 +32,7 @@ from engineering_itagksa.constants import APPROVED, DRAFT, OBSOLETE, SUPERSEDED,
 # Existing drawings are not renamed. The 9,999 cap applies only when a new number is issued. Numbers are
 # shared with Product Revision so the same {component}-5NNNN-{n} string is not issued to both DocTypes.
 FIELD = "workflow_state"
+FILE_REQUIRED_STATES = (REVIEWED, APPROVED)
 LOCKED_STATES = (APPROVED, SUPERSEDED, OBSOLETE)
 LOCKED_NEXT = {
 	APPROVED: (APPROVED, SUPERSEDED, OBSOLETE),
@@ -99,10 +104,10 @@ class EngineeringDrawing(Document):
 			self.assign_revision()
 		L.normalize_revision(self, "revision")
 		if not self.get(FIELD):
-			self.set(FIELD, DRAFT)
-		old, new = L.get_transition(self, FIELD)
-		if self.is_new() and new != DRAFT:
-			frappe.throw(_("A new Engineering Drawing starts as {0}.").format(DRAFT))
+			self.set(FIELD, PREPARED)
+		old, new = L.get_transition(self, FIELD, PREPARED)
+		if self.is_new() and new != PREPARED:
+			frappe.throw(_("A new Engineering Drawing starts as {0}.").format(PREPARED))
 		if new == SUPERSEDED and old != SUPERSEDED:
 			frappe.throw(_("Superseded is set automatically when a newer revision of this drawing is Approved."))
 		self.enforce_lock(old)
@@ -110,11 +115,12 @@ class EngineeringDrawing(Document):
 			self.flags.entering_approved = False
 			return  # locked record: content frozen, no re-stamping
 		self.validate_component_group()
+		self.validate_drawing_type()
 		self.validate_revises()
 		self.validate_single_open_revision()
 		self.validate_external_link()
 		self.validate_drawing_file()
-		self.validate_file_reference_present()
+		self.validate_file_reference_present(new)
 		self.set_checksum_from_file()
 		self.validate_checksum_format()
 		self.stamp_attestation()
@@ -176,6 +182,34 @@ class EngineeringDrawing(Document):
 				)
 			)
 
+	def validate_drawing_type(self):
+		"""v15.3.7: the type must be one of the component's Allowed Drawing Types when any are set, else an enabled
+		type. Checked on a new drawing or when the type / component changes, so older records keep their value."""
+		before = self.get_doc_before_save() if not self.is_new() else None
+		if before and before.drawing_type == self.drawing_type and before.item_component == self.item_component:
+			return
+		from engineering_itagksa.engineering_itag_ksa.doctype.item_component.item_component import get_allowed_drawing_types
+
+		allowed = get_allowed_drawing_types(self.item_component)
+		if allowed:
+			if self.drawing_type not in allowed:
+				frappe.throw(
+					_("Drawing Type {0} is not allowed for Item Component {1}. Allowed: {2}.").format(
+						frappe.bold(self.drawing_type), frappe.bold(self.item_component), ", ".join(allowed)
+					)
+				)
+		elif not frappe.db.get_value("Engineering Drawing Type", self.drawing_type, "enabled"):
+			frappe.throw(_("Drawing Type {0} is disabled.").format(frappe.bold(self.drawing_type)))
+
+	def on_trash(self):
+		"""v15.3.7: only a Prepared drawing that was never sent for review may be deleted. Linked documents are still
+		blocked by the standard Frappe link check. The deleted number is not issued again."""
+		if self.get(FIELD) != PREPARED or self.submitted_for_review_on or self.sent_for_review:
+			frappe.throw(
+				_("Only a Prepared drawing that was never sent for review can be deleted. Use Mark Obsolete instead."),
+				title=_("Cannot delete"),
+			)
+
 	def validate_revises(self):
 		if not self.revises:
 			return
@@ -194,7 +228,7 @@ class EngineeringDrawing(Document):
 			frappe.throw(_("Revision {0} is the same as the revised drawing {1}.").format(self.revision, self.revises))
 
 	def validate_single_open_revision(self):
-		"""Only one Draft / Under Review drawing may revise the same drawing at a time."""
+		"""Only one Prepared / Reviewed drawing may revise the same drawing at a time."""
 		if not self.revises:
 			return
 		open_rev = open_revision_of(self.revises, exclude=self.name)
@@ -224,9 +258,10 @@ class EngineeringDrawing(Document):
 		if new == old:
 			return
 		user = frappe.session.user
-		if new == UNDER_REVIEW:
+		if new == REVIEWED:
 			self.submitted_for_review_by, self.submitted_for_review_on = user, now_datetime()
-		elif new == DRAFT:
+			self.sent_for_review = 1  # v15.3.7: kept after Return to Prepared (delete rule)
+		elif new == PREPARED:
 			self.submitted_for_review_by = self.submitted_for_review_on = None
 			self.approved_by = self.approved_on = None
 		elif new == APPROVED:
@@ -280,11 +315,14 @@ class EngineeringDrawing(Document):
 				title=_("Private attachment required"),
 			)
 
-	def validate_file_reference_present(self):
-		"""Owner rule (v0.1.3): at least one of external_file_link OR drawing_file is required."""
+	def validate_file_reference_present(self, new_state):
+		"""Owner rule (v0.1.3): at least one of external_file_link OR drawing_file is required.
+		v15.3.7: only from Reviewed on; a Prepared drawing may be saved without a file to get its number."""
+		if new_state not in FILE_REQUIRED_STATES:
+			return
 		if not (self.external_file_link or "").strip() and not (self.drawing_file or "").strip():
 			frappe.throw(
-				_("Provide either an external drawing link or attach a local drawing file."),
+				_("Provide either an external drawing link or attach a local drawing file before {0}.").format(new_state),
 				frappe.ValidationError,
 			)
 
@@ -354,7 +392,7 @@ def sha256_of_file_url(file_url):
 
 
 def open_revision_of(drawing, exclude=None):
-	filters = {"revises": drawing, FIELD: ["in", [DRAFT, UNDER_REVIEW]]}
+	filters = {"revises": drawing, FIELD: ["in", [PREPARED, REVIEWED]]}
 	if exclude:
 		filters["name"] = ["!=", exclude]
 	return frappe.db.get_value("Engineering Drawing", filters, ["name", FIELD], as_dict=True)
@@ -398,12 +436,12 @@ def create_revision(source_name):
 			)
 		)
 	new = frappe.new_doc("Engineering Drawing")
-	for f in ("drawing_name", "item_group", "item_component", "drawing_type", "security_classification"):
+	for f in ("item_group", "item_component", "drawing_type", "description", "security_classification"):
 		new.set(f, src.get(f))
 	new.revises = src.name
 	# shown on the draft; re-assigned by the server on save. Legacy unrecognised names start at 1 on a fresh number.
 	new.revision = next_letter_for_base(src.name) if split_name(src.name)[0] else "1"
-	new.set(FIELD, DRAFT)
+	new.set(FIELD, PREPARED)
 	return new.as_dict()
 
 

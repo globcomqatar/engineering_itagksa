@@ -18,7 +18,7 @@ CS = "engineering_itagksa.component_series"
 
 
 def _doc(**kw):
-	d = frappe.get_doc({"doctype": "Engineering Drawing", "item_component": "500", "drawing_name": "x", **kw})
+	d = frappe.get_doc({"doctype": "Engineering Drawing", "item_component": "500", "description": "x", **kw})
 	d.set("__islocal", 1)
 	return d
 

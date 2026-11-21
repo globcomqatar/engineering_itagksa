@@ -1,16 +1,25 @@
+// v15.3.7: states Prepared / Reviewed / Approved; a Prepared drawing needs no file yet (required from Reviewed).
 // v15.3.0: Drawing is not submittable; Status moves with the "Engineering ITAG KSA Engineering Drawing" Workflow buttons.
 // No Item Code on the Drawing, so the Create > Product Revision / BOM buttons are gone until those DocTypes are
 // revised for the new Drawing model (separate pass). A4: attestation is server-stamped.
 frappe.ui.form.on("Engineering Drawing", {
 	setup(frm) {
-		frm.set_query("item_component", () => (frm.doc.item_group ? { filters: { item_group: frm.doc.item_group } } : {}));
+		// v15.3.7: components without an Item Group are offered for any group.
+		frm.set_query("item_component", () =>
+			frm.doc.item_group ? { filters: [["Item Component", "item_group", "in", [frm.doc.item_group, ""]]] } : {}
+		);
+		// v15.3.7: the component's Allowed Drawing Types when any are set, else every enabled type.
+		frm.set_query("drawing_type", () => ({
+			query: "engineering_itagksa.engineering_itag_ksa.doctype.item_component.item_component.drawing_type_query",
+			filters: { item_component: frm.doc.item_component || "" },
+		}));
 		frm.set_query("revises", () => ({
 			filters: { item_component: frm.doc.item_component || "", name: ["!=", frm.doc.name || ""] },
 		}));
 	},
 	refresh(frm) {
 		// Create Revision: Approved, not superseded drawings only. The server re-checks status and blocks a second
-		// open (Draft / Under Review) revision of the same drawing.
+		// open (Prepared / Reviewed) revision of the same drawing.
 		if (frm.is_new() || frm.doc.workflow_state !== "Approved" || frm.doc.superseded_by) return;
 		if (!frappe.model.can_create("Engineering Drawing")) return;
 		frm.add_custom_button(__("Create Revision"), () => {

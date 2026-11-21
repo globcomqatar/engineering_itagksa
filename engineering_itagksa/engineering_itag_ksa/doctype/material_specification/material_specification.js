@@ -3,7 +3,7 @@
 frappe.ui.form.on("Material Specification", {
 	refresh(frm) {
 		// Create Revision: Approved, not superseded specifications only. The server re-checks status and blocks a
-		// second open (Draft / Under Review) revision of the same specification.
+		// second open (Prepared / Reviewed) revision of the same specification.
 		if (frm.is_new() || frm.doc.workflow_state !== "Approved" || frm.doc.superseded_by) return;
 		if (!frappe.model.can_create("Material Specification")) return;
 		frm.add_custom_button(__("Create Revision"), () => {

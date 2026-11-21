@@ -60,14 +60,14 @@
    "idx": 3
   },
   {
-   "default": "Draft",
+   "default": "Prepared",
    "fieldname": "workflow_state",
    "fieldtype": "Select",
    "in_list_view": 0,
    "in_standard_filter": 1,
    "label": "Status",
    "no_copy": 1,
-   "options": "Draft\nUnder Review\nApproved\nSuperseded\nObsolete",
+   "options": "Prepared\nReviewed\nApproved\nSuperseded\nObsolete",
    "read_only": 1,
    "idx": 4
   },
@@ -231,7 +231,7 @@
  "is_submittable": 0,
  "istable": 0,
  "links": [],
- "modified": "2026-11-09 19:30:00.000000",
+ "modified": "2026-11-21 13:30:00.000000",
  "modified_by": "Administrator",
  "module": "Engineering ITAG KSA",
  "name": "Material Specification",
